@@ -37,9 +37,9 @@ class HelloAppTestCase(TestCase):
         url = reverse('requests')
         response = self.client.get(url)
         requests = IncomingRequest.objects.filter(path=reverse('index'))
-        self.assertTrue(requests.count == 1)
+        self.assertTrue(requests.count() == 1)
         requests = IncomingRequest.objects.filter(path=reverse('requests'))
-        self.assertTrue(requests.count == 1)
+        self.assertTrue(requests.count() == 1)
 
     def test_request_view(self):
         url = reverse('index')
