@@ -5,6 +5,7 @@ from django.conf import settings
 from .forms import PersonForm, UserForm
 from django.http import HttpResponseRedirect
 from django.core.urlresolvers import reverse
+from django.contrib.auth import authenticate, login
 
 PERSON_RESPONSE_KEYWORD = 'person'
 REQUESTS_RESPONSE_KEYWORD = 'requests'
@@ -69,7 +70,33 @@ def register_user(request):
 
 
 def login_user(request):
-    return render(request, 'hello/login.html')
+    message = ''
+    if request.method == 'POST':
+        user_form = UserForm(data=request.POST)
+        username = request.POST['username']
+        password = request.POST['password']
+
+        user = authenticate(username=username, password=password)
+        if user:
+            if user.is_active:
+                login(request, user)
+                person = get_object_or_404(Person, user_id=user.id)
+                return HttpResponseRedirect(reverse('view_person', kwargs={'person_id': person.id}))
+            else:
+                message = "Your account is disabled"
+        else:
+            message = INVALID_LOGIN_MESSAGE.format(username, password)
+    else:
+        user_form = UserForm()
+
+    request_context = RequestContext(
+        request,
+        {
+            'form': user_form,
+            'message': message
+        })
+
+    return render(request, 'hello/login.html', request_context)
 
 
 def edit(request, person_id):
