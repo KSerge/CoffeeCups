@@ -5,7 +5,7 @@ from django.conf import settings
 from .forms import PersonForm, UserForm, UserEditForm
 from django.http import HttpResponseRedirect
 from django.core.urlresolvers import reverse
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 
@@ -127,3 +127,9 @@ def edit(request, person_id):
             'message': message
         })
     return render(request, 'hello/edit.html', request_context)
+
+
+@login_required
+def user_logout(request):
+    logout(request)
+    return HttpResponseRedirect(reverse('index'))
