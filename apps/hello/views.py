@@ -2,10 +2,12 @@ from django.shortcuts import render, get_object_or_404
 from django.template import RequestContext
 from .models import Person, IncomingRequest
 from django.conf import settings
-from .forms import PersonForm, UserForm
+from .forms import PersonForm, UserForm, UserEditForm
 from django.http import HttpResponseRedirect
 from django.core.urlresolvers import reverse
 from django.contrib.auth import authenticate, login
+from django.contrib.auth.models import User
+from django.contrib.auth.decorators import login_required
 
 PERSON_RESPONSE_KEYWORD = 'person'
 REQUESTS_RESPONSE_KEYWORD = 'requests'
@@ -100,4 +102,28 @@ def login_user(request):
 
 
 def edit(request, person_id):
-    return render(request, 'hello/edit.html')
+    person = get_object_or_404(Person, pk=person_id)
+    user = get_object_or_404(User, pk=person.user_id)
+    message = ''
+    if request.method == 'POST':
+        person_form = PersonForm(request.POST, request.FILES, instance=person)
+        user_form = UserEditForm(request.POST, instance=user)
+        if user_form.is_valid() and person_form.is_valid():
+            user_form.save()
+            person_form.save()
+            return HttpResponseRedirect(reverse('view_person', kwargs={'person_id': person.id}))
+        else:
+            message = SAVE_FORM_ERRORS_MESSAGE
+    else:
+        person_form = PersonForm(instance=person)
+        user_form = UserEditForm(instance=user)
+
+    request_context = RequestContext(
+        request,
+        {
+            'person': person,
+            'person_form': person_form,
+            'user_form': user_form,
+            'message': message
+        })
+    return render(request, 'hello/edit.html', request_context)
