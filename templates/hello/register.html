@@ -1,9 +1,32 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title></title>
-</head>
-<body>
+{% extends "base.html" %}
 
-</body>
-</html>
+{% load staticfiles %}
+{% block extra_head %}
+<link rel="stylesheet" href='{% static "css/main.css" %}' />
+{% endblock %}
+
+{% block content %}
+<h1>42 Coffee Cups Test Assignment</h1>
+<h2>Register New User</h2>
+{% if message %}<p>{{ message }}</p>{% endif %}
+
+<form action="{% url 'register' %}" method="post">
+{% csrf_token %}
+    <div class="inline">
+        <p>
+            <div class="label-wrapper"><label for="id_username">User Name:</label></div>
+            {{ user_form.username.errors }}
+            {{ user_form.username }}
+        </p>
+        <p>
+            <div class="label-wrapper"><label for="id_password">Password:</label></div>
+            {{ user_form.password.errors }}
+            {{ user_form.password }}
+        </p>
+    </div>
+    <div class="command-buttons">
+        <input type="submit" value="Register" />
+        <a href="{% url 'default' %}">Cancel</a>
+    </div>
+</form>
+{% endblock %}
