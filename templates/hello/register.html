@@ -23,6 +23,21 @@
             {{ user_form.password.errors }}
             {{ user_form.password }}
         </p>
+        <p>
+        <div class="label-wrapper"><label for="id_name">Name:</label></div>
+        {{ user_form.first_name.errors }}
+        {{ user_form.first_name }}
+        </p>
+        <p>
+        <div class="label-wrapper"><label for="id_last_name">Last name:</label></div>
+        {{ user_form.last_name.errors }}
+        {{ user_form.last_name }}
+        </p>
+        <p>
+        <div class="label-wrapper"><label for="id_email">Email:</label></div>
+        {{ user_form.email.errors }}
+        {{ user_form.email }}
+        </p>
     </div>
     <div class="command-buttons">
         <input type="submit" value="Register" />
