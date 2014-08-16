@@ -1,6 +1,32 @@
 from django.test import TestCase
+from django.core.urlresolvers import reverse
+from django.contrib.auth.models import User
+from .models import Person
+from .views import PERSON_RESPONSE_KEYWORD
 
-# Create your tests here.
-class SomeTests(TestCase):
-    def test_math(self):
-        assert(2+2==5)
+
+class HelloAppTestCase(TestCase):
+    fixtures = ['initial_data.json']
+
+    def test_person_is_inserted(self):
+        user = User.objects.get(pk=2)
+        self.assertTrue(Person.objects.filter(user_id=user.id).count() == 1)
+
+    def test_default_view(self):
+        url = reverse('default')
+        response = self.client.get(url)
+        self.assertTrue(response.context['person'].user.first_name == 'Serhij')
+        self.assertTrue('<h1>42 Coffee Cups Test Assignment</h1>' in response.content)
+
+    def test_index_view(self):
+        url = reverse('index')
+        response = self.client.get(url)
+        self.assertTrue(PERSON_RESPONSE_KEYWORD in response.context)
+        self.assertTrue(response.context[PERSON_RESPONSE_KEYWORD].user.first_name == 'Serhij')
+        self.assertTrue('<h1>42 Coffee Cups Test Assignment</h1>' in response.content)
+
+    def test_edit_get_view(self):
+        url = reverse('view_person', kwargs={'person_id': 1})
+        response = self.client.get(url)
+        self.assertTrue(PERSON_RESPONSE_KEYWORD in response.context)
+        self.assertTrue(response.context[PERSON_RESPONSE_KEYWORD].user.first_name == 'Serhij')
