@@ -6,6 +6,8 @@ from django.conf import settings
 PERSON_RESPONSE_KEYWORD = 'person'
 REQUESTS_RESPONSE_KEYWORD = 'requests'
 CONTEXT_SETTINGS_KEYWORD = 'settings'
+SAVE_FORM_ERRORS_MESSAGE = 'Some Errors Occurred'
+INVALID_LOGIN_MESSAGE = 'Invalid login details: {0}, {1}'
 
 
 def context_processor(request):
