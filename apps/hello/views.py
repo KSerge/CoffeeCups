@@ -101,9 +101,13 @@ def login_user(request):
     return render(request, 'hello/login.html', request_context)
 
 
-def edit(request, person_id):
-    person = get_object_or_404(Person, pk=person_id)
-    user = get_object_or_404(User, pk=person.user_id)
+def edit(request, person_id=0):
+    try:
+        person = Person.objects.get(pk=person_id)
+        user = User.objects.get(pk=person.user_id)
+    except Person.DoesNotExist, User.DoesNotExists:
+        person = Person()
+        user = User()
     message = ''
     if request.method == 'POST':
         person_form = PersonForm(request.POST, request.FILES, instance=person)

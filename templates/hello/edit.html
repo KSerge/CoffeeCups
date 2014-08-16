@@ -9,6 +9,7 @@
 <h1>42 Coffee Cups Test Assignment</h1>
 {% if message %}<p>{{ message }}</p>{% endif %}
 <div style="width: 100%;">
+{% if person.user.id %}
     <form action="{% url 'edit' person_id=person.id %}" method="post" enctype="multipart/form-data" id="mainForm">
         {% csrf_token %}
         <div class="inline">
@@ -63,6 +64,9 @@
             <a href="{% url 'view_person' person_id=person.id %}">Cancel</a>
         </div>
     </form>
+{% else %}
+<h3>Wrong Person data for edit</h3>
+{% endif %}
 </div>
 <div class="sections-separator"></div>
 <a href="{% url 'requests' %}">Requests</a>

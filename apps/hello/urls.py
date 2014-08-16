@@ -6,6 +6,7 @@ urlpatterns = [
     url(r'hello/login/$', login_user, name='login'),
     url(r'^hello/logout/$', user_logout, name='logout'),
     url(r'^hello/edit/(?P<person_id>\w+)/$', edit, name='edit'),
+    url(r'^hello/edit/$', edit, name='edit'),
     url(r'^hello/requests/$', view_requests, name='requests'),
     url(r'^hello/(?P<person_id>\w+)/$', index, name='view_person'),
     url(r'^$', index, name='default'),
