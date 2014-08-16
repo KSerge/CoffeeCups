@@ -31,3 +31,15 @@ def view_requests(request):
         request,
         {REQUESTS_RESPONSE_KEYWORD: stored_requests})
     return render(request, 'hello/requests.html', request_context)
+
+
+def edit(request, person_id):
+    return render(request, 'hello/edit.html')
+
+
+def register_user(request):
+    return render(request, 'hello/register.html')
+
+
+def login_user(request):
+    return render(request, 'hello/login.html')
