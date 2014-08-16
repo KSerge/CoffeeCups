@@ -83,7 +83,6 @@ MEDIA_ROOT = os.path.join(BASE_DIR, '..', 'uploads')
 # URL that handles the media served from MEDIA_ROOT. Make sure to use a
 MEDIA_URL = '/uploads/'
 
-
 # Static files (CSS, JavaScript, Images)
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
@@ -94,7 +93,6 @@ STATIC_URL = '/static/'
 STATICFILES_DIRS = (
     os.path.join(BASE_DIR, 'assets'),
 )
-
 
 # Template Settings
 TEMPLATE_DIRS = (
