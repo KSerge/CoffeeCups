@@ -7,6 +7,7 @@
 
 {% block content %}
 <h1>42 Coffee Cups Test Assignment</h1>
+{% if person.Id %}
 <div class="inline">
     <p>
         <div class="label-wrapper text-allign-left">Name:</div>
@@ -42,4 +43,7 @@
         <textarea cols="50" rows="6">{{person.other_contacts}}</textarea>
     </p>
 </div>
+{% else %}
+<h3>There is no Person data in system yet</h3>
+{% endif %}
 {% endblock %}

@@ -6,7 +6,10 @@ PERSON_RESPONSE_KEYWORD = 'person'
 
 
 def index(request, person_id=1):
-    person = get_object_or_404(Person, pk=person_id)
+    try:
+        person = Person.objects.get(pk=person_id)
+    except Person.DoesNotExist:
+        person = Person()
     request_context = RequestContext(
         request,
         {'person': person})
