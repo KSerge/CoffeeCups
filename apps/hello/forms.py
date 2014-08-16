@@ -1,4 +1,4 @@
-from django.forms import ModelForm, Textarea, PasswordInput
+from django.forms import ModelForm, Textarea, PasswordInput, DateInput
 from .models import Person
 from django.contrib.auth.models import User
 
@@ -11,6 +11,7 @@ class PersonForm(ModelForm):
         widgets = {
             'bio': Textarea(attrs={'cols': 50, 'rows': 5, 'maxlength': 250}),
             'other_contacts': Textarea(attrs={'cols': 50, 'rows': 5, 'maxlength': 250}),
+            'date_of_birth': DateInput(attrs={'class': 'datepicker'}),
         }
 
 
