@@ -14,5 +14,5 @@ build
 media
 static
 *.dat
-.coverage
+*.coverage
 *.txt
