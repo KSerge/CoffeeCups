@@ -10,3 +10,8 @@ class Person(models.Model):
     skype = models.CharField(max_length=50, null=True, blank=True)
     other_contacts = models.CharField(max_length=254, null=True, blank=True)
     profile_image = models.ImageField(upload_to="profile", null=True, blank=True)
+
+
+class IncomingRequest(models.Model):
+    path = models.CharField(max_length=500)
+    visiting_date = models.DateTimeField(auto_now=True)
