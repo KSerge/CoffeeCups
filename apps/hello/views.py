@@ -2,6 +2,9 @@ from django.shortcuts import render, get_object_or_404
 from django.template import RequestContext
 from .models import Person, IncomingRequest
 from django.conf import settings
+from .forms import PersonForm, UserForm
+from django.http import HttpResponseRedirect
+from django.core.urlresolvers import reverse
 
 PERSON_RESPONSE_KEYWORD = 'person'
 REQUESTS_RESPONSE_KEYWORD = 'requests'
@@ -35,13 +38,39 @@ def view_requests(request):
     return render(request, 'hello/requests.html', request_context)
 
 
-def edit(request, person_id):
-    return render(request, 'hello/edit.html')
-
-
 def register_user(request):
-    return render(request, 'hello/register.html')
+    message = ''
+    if request.method == 'POST':
+        user_form = UserForm(data=request.POST)
+        person_form = PersonForm(data=request.POST)
+        if user_form.is_valid() and person_form.is_valid():
+            user = user_form.save()
+            user.set_password(user.password)
+            user.save()
+
+            person = person_form.save(commit=False)
+            person.user = user
+            person.save()
+            return HttpResponseRedirect(reverse('view_person', kwargs={'person_id': person.id}))
+        else:
+            message = SAVE_FORM_ERRORS_MESSAGE
+    else:
+        user_form = UserForm()
+        person_form = PersonForm()
+
+    request_context = RequestContext(
+        request,
+        {
+            'user_form': user_form,
+            'person_form': person_form,
+            'message': message
+        })
+    return render(request, 'hello/register.html', request_context)
 
 
 def login_user(request):
     return render(request, 'hello/login.html')
+
+
+def edit(request, person_id):
+    return render(request, 'hello/edit.html')
