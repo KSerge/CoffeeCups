@@ -1,9 +1,69 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title></title>
-</head>
-<body>
+{% extends "base.html" %}
+{% load staticfiles %}
 
-</body>
-</html>
+{% block extra_head %}
+<link rel="stylesheet" href='{% static "css/main.css" %}' />
+{% endblock %}
+
+{% block content %}
+<h1>42 Coffee Cups Test Assignment</h1>
+{% if message %}<p>{{ message }}</p>{% endif %}
+<div style="width: 100%;">
+    <form action="{% url 'edit' person_id=person.id %}" method="post" enctype="multipart/form-data" id="mainForm">
+        {% csrf_token %}
+        <div class="inline">
+            <p>
+            <div class="label-wrapper"><label for="id_name">Name:</label></div>
+            {{ user_form.first_name.errors }}
+            {{ user_form.first_name }}
+            </p>
+            <p>
+            <div class="label-wrapper"><label for="id_last_name">Last name:</label></div>
+            {{ user_form.last_name.errors }}
+            {{ user_form.last_name }}
+            </p>
+            <p>
+            <div class="label-wrapper"><label for="id_date_of_birth">Date of birth:</label></div>
+            {{ person_form.date_of_birth.errors }}
+            {{ person_form.date_of_birth }}
+            </p>
+            <div>
+                <div class="label-wrapper"><label for="profile_image">Photo:</label></div>
+                {{ person_form.profile_image.errors }}
+                {{ person_form.profile_image }}
+            </div>
+            {% include "hello/profile_image.html" with profile=person %}
+        </div>
+        <div class="inline">
+            <p>
+            <div class="label-wrapper"><label for="id_email">Email:</label></div>
+            {{ user_form.email.errors }}
+            {{ user_form.email }}
+            </p>
+            <div class="label-wrapper"><label for="id_jabber">Jabber:</label></div>
+            {{ person_form.jabber.errors }}
+            {{ person_form.jabber }}
+            </p>
+            <div class="label-wrapper"><label for="id_skype">Skype:</label></div>
+            {{ person_form.skype.errors }}
+            {{ person_form.skype }}
+            </p>
+            <div class="toplevel-label-wrapper"><label for="id_other_contacts">Other contacts:</label></div>
+            {{ person_form.other_contacts.errors }}
+            {{ person_form.other_contacts }}
+            </p>
+            <p>
+            <div class="toplevel-label-wrapper"><label for="id_bio">Bio:</label></div>
+            {{ person_form.bio.errors }}
+            {{ person_form.bio }}
+            </p>
+        </div>
+        <div class="command-buttons">
+            <input type="submit" value="Save" />
+            <a href="{% url 'view_person' person_id=person.id %}">Cancel</a>
+        </div>
+    </form>
+</div>
+
+<div class="sections-separator"></div>
+{% endblock %}

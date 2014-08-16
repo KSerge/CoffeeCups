@@ -1,0 +1,7 @@
+<div class="profile-image">
+{% if profile.profile_image %}
+    <img src="{{ profile.profile_image.url }}" alt="My image" width="300px" height="400px"/>
+{% else %}
+    <div class="label-wrapper text-allign-left">Photo preview</div>
+{% endif %}
+</div>
