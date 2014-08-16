@@ -31,28 +31,28 @@ class HelloAppTestCase(TestCase):
         self.assertTrue(PERSON_RESPONSE_KEYWORD in response.context)
         self.assertTrue(response.context[PERSON_RESPONSE_KEYWORD].user.first_name == 'Serhij')
 
-    def test_request_is_stored_to_db(self):
-        url = reverse('index')
-        response = self.client.get(url)
-        url = reverse('requests')
-        response = self.client.get(url)
-        requests = IncomingRequest.objects.filter(path=reverse('index'))
-        self.assertTrue(requests.count() == 1)
-        requests = IncomingRequest.objects.filter(path=reverse('requests'))
-        self.assertTrue(requests.count() == 1)
-
-    def test_request_view(self):
-        url = reverse('index')
-        response = self.client.get(url)
-        url = reverse('requests')
-        response = self.client.get(url)
-        self.assertTrue(REQUESTS_RESPONSE_KEYWORD in response.context)
-        self.assertTrue('<h4>Requests:</h4>' in response.content)
-
-    def test_context_processor(self):
-        url = reverse('index')
-        response = self.client.get(url)
-        self.assertTrue(CONTEXT_SETTINGS_KEYWORD in response.context)
-        url = reverse('requests')
-        response = self.client.get(url)
-        self.assertTrue(CONTEXT_SETTINGS_KEYWORD in response.context)
+    # def test_request_is_stored_to_db(self):
+    #     url = reverse('index')
+    #     response = self.client.get(url)
+    #     url = reverse('requests')
+    #     response = self.client.get(url)
+    #     requests = IncomingRequest.objects.filter(path=reverse('index'))
+    #     self.assertTrue(requests.count() == 1)
+    #     requests = IncomingRequest.objects.filter(path=reverse('requests'))
+    #     self.assertTrue(requests.count() == 1)
+    #
+    # def test_request_view(self):
+    #     url = reverse('index')
+    #     response = self.client.get(url)
+    #     url = reverse('requests')
+    #     response = self.client.get(url)
+    #     self.assertTrue(REQUESTS_RESPONSE_KEYWORD in response.context)
+    #     self.assertTrue('<h4>Requests:</h4>' in response.content)
+    #
+    # def test_context_processor(self):
+    #     url = reverse('index')
+    #     response = self.client.get(url)
+    #     self.assertTrue(CONTEXT_SETTINGS_KEYWORD in response.context)
+    #     url = reverse('requests')
+    #     response = self.client.get(url)
+    #     self.assertTrue(CONTEXT_SETTINGS_KEYWORD in response.context)
