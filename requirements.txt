@@ -1,3 +1,6 @@
 Django
 South>=1.0
 importlib==1.0.3 #for old python versions
+coverage==3.7.1
+django-nose==1.2
+Pillow==2.0.0
