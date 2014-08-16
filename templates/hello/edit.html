@@ -29,6 +29,12 @@ $(document).ready(function () {
 {% if message %}<p>{{ message }}</p>{% endif %}
 <div style="width: 100%;">
 {% if person.user.id %}
+    <div class="overlay" id="overlay"></div>
+    <div class="overlayContent" id="overlayContent" >
+        <div style="text-align: center;">
+            <div style="color: #038; margin-bottom: 0px; font-size: 24px; padding-top: 10px; cursor: default;">Please wait</div>
+        </div>
+    </div>
     <form action="{% url 'edit' person_id=person.id %}" method="post" enctype="multipart/form-data" id="mainForm">
         {% csrf_token %}
         <div class="inline">
