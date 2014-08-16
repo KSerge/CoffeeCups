@@ -21,11 +21,7 @@
         <div class="label-wrapper text-allign-left">Date of birth:</div>
         {{person.date_of_birth}}
     </p>
-    <p><div class="label-wrapper text-allign-left"></div></p>
-    <p>
-        <div class="toplevel-label-wrapper">Bio:</div>
-        <textarea cols="50" rows="6">{{person.bio}}</textarea>
-    </p>
+    {% include "hello/profile_image.html" with profile=person %}
 </div>
 <div class="inline">
     <p><div class="label-wrapper text-allign-left">Contacts</div></p>
@@ -42,10 +38,22 @@
         <div class="toplevel-label-wrapper">Other contacts:</div>
         <textarea cols="50" rows="6">{{person.other_contacts}}</textarea>
     </p>
+    <p>
+        <div class="toplevel-label-wrapper">Bio:</div>
+        <textarea cols="50" rows="6">{{person.bio}}</textarea>
+    </p>
 </div>
 {% else %}
 <h3>There is no Person data in system yet</h3>
 {% endif %}
+<div>
+{% if user.is_authenticated %}
+    <h3>Hello {{ user.username }}!</h3>
+{% else %}
+    <a href="{% url 'login' %}">Login</a>
+    <a href="{% url 'register' %}">Register</a>
+{% endif %}
+</div>
 <div class="sections-separator"></div>
 <a href="{% url 'requests' %}">Requests</a>
 {% endblock %}
