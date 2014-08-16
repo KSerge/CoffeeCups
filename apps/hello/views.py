@@ -4,6 +4,7 @@ from .models import Person, IncomingRequest
 
 PERSON_RESPONSE_KEYWORD = 'person'
 REQUESTS_RESPONSE_KEYWORD = 'requests'
+CONTEXT_SETTINGS_KEYWORD = 'settings'
 
 
 def index(request, person_id=1):

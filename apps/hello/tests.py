@@ -2,7 +2,7 @@ from django.test import TestCase
 from django.core.urlresolvers import reverse
 from django.contrib.auth.models import User
 from .models import Person, IncomingRequest
-from .views import PERSON_RESPONSE_KEYWORD, REQUESTS_RESPONSE_KEYWORD
+from .views import PERSON_RESPONSE_KEYWORD, REQUESTS_RESPONSE_KEYWORD, CONTEXT_SETTINGS_KEYWORD
 
 
 class HelloAppTestCase(TestCase):
@@ -48,3 +48,11 @@ class HelloAppTestCase(TestCase):
         response = self.client.get(url)
         self.assertTrue(REQUESTS_RESPONSE_KEYWORD in response.context)
         self.assertTrue('<h4>Requests:</h4>' in response.content)
+
+    def test_context_processor(self):
+        url = reverse('index')
+        response = self.client.get(url)
+        self.assertTrue(CONTEXT_SETTINGS_KEYWORD in response.context)
+        url = reverse('requests')
+        response = self.client.get(url)
+        self.assertTrue(CONTEXT_SETTINGS_KEYWORD in response.context)
