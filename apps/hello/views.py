@@ -13,9 +13,13 @@ def index(request, person_id=1):
         person = Person()
     request_context = RequestContext(
         request,
-        {'person': person})
+        {PERSON_RESPONSE_KEYWORD: person})
     return render(request, 'hello/index.html', request_context)
 
 
 def view_requests(request):
-    return render(request, 'hello/requests.html')
+    stored_requests = IncomingRequest.objects.order_by('visiting_date')[0:10]
+    request_context = RequestContext(
+        request,
+        {REQUESTS_RESPONSE_KEYWORD: stored_requests})
+    return render(request, 'hello/requests.html', request_context)

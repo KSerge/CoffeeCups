@@ -1,9 +1,21 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title></title>
-</head>
-<body>
+{% extends "base.html" %}
+{% load staticfiles %}
 
-</body>
-</html>
+{% block extra_head %}
+<link rel="stylesheet" href='{% static "css/hello.css" %}' />
+{% endblock %}
+
+{% block content %}
+<h1>42 Coffee Cups Test Assignment</h1>
+
+{% if requests %}
+    <h4>Requests:</h4>
+    {% for record in requests %}
+    <p>'{{ record.path }}' requested at: {{record.visiting_date}}</p>
+    {% endfor %}
+{% else %}
+    <h4>There are no Requests srored in DB yet:</h4>
+{% endif %}
+<div class="sections-separator"></div>
+<a href="{% url 'index' %}">Back</a>
+{% endblock %}

@@ -26,3 +26,9 @@ div.label-wrapper{
 textarea{
     resize: none;
 }
+div.sections-separator{
+    clear: both;
+    width: 100%;
+    border: 1px solid;
+    border-right-color:	#484848;
+}
