@@ -1,8 +1,8 @@
 from django.test import TestCase
 from django.core.urlresolvers import reverse
 from django.contrib.auth.models import User
-from .models import Person
-from .views import PERSON_RESPONSE_KEYWORD
+from .models import Person, IncomingRequest
+from .views import PERSON_RESPONSE_KEYWORD, REQUESTS_RESPONSE_KEYWORD
 
 
 class HelloAppTestCase(TestCase):
@@ -30,3 +30,21 @@ class HelloAppTestCase(TestCase):
         response = self.client.get(url)
         self.assertTrue(PERSON_RESPONSE_KEYWORD in response.context)
         self.assertTrue(response.context[PERSON_RESPONSE_KEYWORD].user.first_name == 'Serhij')
+
+    def test_request_is_stored_to_db(self):
+        url = reverse('index')
+        response = self.client.get(url)
+        url = reverse('requests')
+        response = self.client.get(url)
+        requests = IncomingRequest.objects.filter(path=reverse('index'))
+        self.assertTrue(requests.count == 1)
+        requests = IncomingRequest.objects.filter(path=reverse('requests'))
+        self.assertTrue(requests.count == 1)
+
+    def test_request_view(self):
+        url = reverse('index')
+        response = self.client.get(url)
+        url = reverse('requests')
+        response = self.client.get(url)
+        self.assertTrue(REQUESTS_RESPONSE_KEYWORD in response.context)
+        self.assertTrue('<h4>Requests:</h4>' in response.content)

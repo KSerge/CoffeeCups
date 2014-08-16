@@ -3,6 +3,7 @@ from django.template import RequestContext
 from .models import Person, IncomingRequest
 
 PERSON_RESPONSE_KEYWORD = 'person'
+REQUESTS_RESPONSE_KEYWORD = 'requests'
 
 
 def index(request, person_id=1):
