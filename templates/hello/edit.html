@@ -6,7 +6,7 @@
 <script src="//code.jquery.com/jquery-1.10.2.js"></script>
 <script src="//code.jquery.com/ui/1.11.0/jquery-ui.js"></script>
 <script src="http://malsup.github.com/jquery.form.js"></script>
-<link rel="stylesheet" href="http://code.jquery.com/ui/1.11.0/themes/smoothness/jquery-ui.css" />
+{{person_form.media}}
 <script>
 $(document).ready(function () {
     $('#mainForm').ajaxForm({
@@ -20,8 +20,6 @@ $(document).ready(function () {
             top.location.href = '/';
         }
     });
-
-    $(".datepicker" ).datepicker();
 });
 </script>
 {% endblock %}

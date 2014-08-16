@@ -1,6 +1,7 @@
-from django.forms import ModelForm, Textarea, PasswordInput, DateInput
+from django.forms import ModelForm, Textarea, PasswordInput
 from .models import Person
 from django.contrib.auth.models import User
+from .widjets import CalendarWidget
 
 
 class PersonForm(ModelForm):
@@ -11,7 +12,7 @@ class PersonForm(ModelForm):
         widgets = {
             'bio': Textarea(attrs={'cols': 50, 'rows': 5, 'maxlength': 250}),
             'other_contacts': Textarea(attrs={'cols': 50, 'rows': 5, 'maxlength': 250}),
-            'date_of_birth': DateInput(attrs={'class': 'datepicker'}),
+            'date_of_birth': CalendarWidget(attrs={'class': 'datepicker'}),
         }
 
 
