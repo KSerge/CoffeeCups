@@ -1,6 +1,7 @@
 {% extends "base.html" %}
 
 {% load staticfiles %}
+{% load hello_templatestags %}
 {% block extra_head %}
 <link rel="stylesheet" href='{% static "css/main.css" %}' />
 {% endblock %}
@@ -49,6 +50,7 @@
 <div>
 {% if user.is_authenticated %}
     <h3>Hello {{ user.username }}!</h3>
+    {% edit_link person %}
     <a href="{% url 'logout' %}">Log Out</a>
 {% else %}
     <a href="{% url 'login' %}">Login</a>
