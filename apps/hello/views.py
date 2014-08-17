@@ -3,11 +3,12 @@ from django.template import RequestContext
 from .models import Person, IncomingRequest
 from django.conf import settings
 from .forms import PersonForm, UserForm, UserEditForm
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, HttpResponse
 from django.core.urlresolvers import reverse
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
+import json
 
 PERSON_RESPONSE_KEYWORD = 'person'
 REQUESTS_RESPONSE_KEYWORD = 'requests'
@@ -115,6 +116,10 @@ def edit(request, person_id=0):
         if user_form.is_valid() and person_form.is_valid():
             user_form.save()
             person_form.save()
+            if request.is_ajax():
+                data = {}
+                data['redirect_url'] = reverse('view_person', kwargs={'person_id': person.id})
+                return HttpResponse(json.dumps(data), content_type="application/json")
             return HttpResponseRedirect(reverse('view_person', kwargs={'person_id': person.id}))
         else:
             message = SAVE_FORM_ERRORS_MESSAGE
