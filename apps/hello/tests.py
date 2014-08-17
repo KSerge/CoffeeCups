@@ -30,12 +30,6 @@ class HelloAppTestCase(TestCase):
         self.assertTrue(response.context[PERSON_RESPONSE_KEYWORD].user.first_name == 'Serhij')
         self.assertTrue('<h1>42 Coffee Cups Test Assignment</h1>' in response.content)
 
-    def test_edit_get_view(self):
-        url = reverse('view_person', kwargs={'person_id': 1})
-        response = self.client.get(url)
-        self.assertTrue(PERSON_RESPONSE_KEYWORD in response.context)
-        self.assertTrue(response.context[PERSON_RESPONSE_KEYWORD].user.first_name == 'Serhij')
-
     def test_request_is_stored_to_db(self):
         url = reverse('index')
         response = self.client.get(url)
@@ -112,3 +106,23 @@ class HelloAppTestCase(TestCase):
         url = reverse('login')
         response = self.client.post(url, {'username': TEST_USERNAME, 'password': TEST_PASSWORD})
         self.assertTrue(INVALID_LOGIN_MESSAGE.format(TEST_USERNAME, TEST_PASSWORD) in response.content)
+
+    def test_edit_link_for_not_auth_user(self):
+        user = User.objects.get(pk=2)
+        person = Person.objects.get(user_id=user.id)
+        url = reverse('view_person',  kwargs={'person_id': person.id})
+        response = self.client.get(url)
+        link = '<a href="{0}">Edit</a>'.format(reverse('edit', kwargs={'person_id': person.id}))
+        self.assertFalse(link in response.content)
+
+    def test_edit_link_for_auth_user(self):
+        url = reverse('register')
+        response = self.client.post(url, {'username': TEST_USERNAME, 'password': TEST_PASSWORD})
+        url = reverse('login')
+        response = self.client.post(url, {'username': TEST_USERNAME, 'password': TEST_PASSWORD})
+        user = User.objects.get(username=TEST_USERNAME)
+        person = Person.objects.get(user_id=user.id)
+        url = reverse('view_person',  kwargs={'person_id': person.id})
+        response = self.client.get(url)
+        link = '<a href="{0}">Edit</a>'.format(reverse('edit', kwargs={'person_id': person.id}))
+        self.assertTrue(link in response.content)
