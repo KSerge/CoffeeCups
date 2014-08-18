@@ -27,6 +27,7 @@ class ModelObjectsTracker(models.Model):
     model_name = models.CharField(max_length=50, null=False, blank=False)
     type_of_event = models.CharField(max_length=10, null=False, blank=False)
     created_date = models.DateTimeField(default=timezone.now())
+    priority = models.PositiveSmallIntegerField(default=0)
 
 MODEL_NAMES = (Person.__name__, IncomingRequest.__name__,)
 
