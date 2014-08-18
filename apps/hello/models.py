@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
+from django.utils import timezone
 
 
 class Person(models.Model):
@@ -15,3 +16,9 @@ class Person(models.Model):
 class IncomingRequest(models.Model):
     path = models.CharField(max_length=500)
     visiting_date = models.DateTimeField(auto_now=True)
+
+
+class ModelObjectsTracker(models.Model):
+    model_name = models.CharField(max_length=50, null=False, blank=False)
+    type_of_event = models.CharField(max_length=10, null=False, blank=False)
+    created_date = models.DateTimeField(default=timezone.now())
