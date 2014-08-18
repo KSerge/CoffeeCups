@@ -42,6 +42,10 @@ def view_requests(request):
     return render(request, 'hello/requests.html', request_context)
 
 
+def edit_requests(request):
+    return render(request, 'hello/edit_requests.html')
+
+
 def register_user(request):
     message = ''
     if request.method == 'POST':
