@@ -2,7 +2,7 @@ from django.shortcuts import render, get_object_or_404
 from django.template import RequestContext
 from .models import Person, IncomingRequest
 from django.conf import settings
-from .forms import PersonForm, UserForm, UserEditForm
+from .forms import PersonForm, UserForm, UserEditForm, IncomingRequestFormSet
 from django.http import HttpResponseRedirect, HttpResponse
 from django.core.urlresolvers import reverse
 from django.contrib.auth import authenticate, login, logout
@@ -43,7 +43,13 @@ def view_requests(request):
 
 
 def edit_requests(request):
-    return render(request, 'hello/edit_requests.html')
+    distinct_requests = IncomingRequest.objects.values('path', 'priority').distinct()
+    formset = IncomingRequestFormSet(queryset=IncomingRequest.objects.values('path').distinct())
+    # requests_formset = modelformset_factory(queryset=IncomingRequest.objects.values('path', 'priority').distinct())
+    request_context = RequestContext(
+        request,
+        {REQUESTS_RESPONSE_KEYWORD: distinct_requests, 'formset': formset},)
+    return render(request, 'hello/edit_requests.html', request_context)
 
 
 def register_user(request):
