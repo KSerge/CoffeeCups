@@ -1,7 +1,7 @@
 from django.test import TestCase
 from django.core.urlresolvers import reverse
 from django.contrib.auth.models import User
-from .models import Person, IncomingRequest
+from .models import *
 from .views import PERSON_RESPONSE_KEYWORD, REQUESTS_RESPONSE_KEYWORD, CONTEXT_SETTINGS_KEYWORD
 from .views import SAVE_FORM_ERRORS_MESSAGE, INVALID_LOGIN_MESSAGE
 
@@ -100,6 +100,24 @@ class HelloAppTestCase(TestCase):
         response = self.client.get(url)
         link = '<a href="{0}">Edit</a>'.format(reverse('edit', kwargs={'person_id': person.id}))
         self.assertTrue(link in response.content)
+
+    def test_model_signals(self):
+        tracking_objects = ModelObjectsTracker.objects.filter(
+            model_name=Person.__name__,
+            type_of_event=CREATE_ACTION_NAME)
+        self.assertTrue(tracking_objects.count() == 1)
+        person = Person.objects.get(pk=1)
+        person.skype = 'Skype Account'
+        person.save()
+        tracking_objects = ModelObjectsTracker.objects.filter(
+            model_name=Person.__name__,
+            type_of_event=EDIT_ACTION_NAME)
+        self.assertTrue(tracking_objects.count() == 1)
+        person.delete()
+        tracking_objects = ModelObjectsTracker.objects.filter(
+            model_name=Person.__name__,
+            type_of_event=DELETE_ACTION_NAME)
+        self.assertTrue(tracking_objects.count() == 1)
 
     #This test fails on getBarista
     def test_request_is_stored_to_db(self):
