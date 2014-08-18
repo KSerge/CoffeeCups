@@ -8,15 +8,15 @@ from django.db import models
 class Migration(SchemaMigration):
 
     def forwards(self, orm):
-        # Adding field 'ModelObjectsTracker.priority'
-        db.add_column(u'hello_modelobjectstracker', 'priority',
+        # Adding field 'IncomingRequest.priority'
+        db.add_column(u'hello_incomingrequest', 'priority',
                       self.gf('django.db.models.fields.PositiveSmallIntegerField')(default=0),
                       keep_default=False)
 
 
     def backwards(self, orm):
-        # Deleting field 'ModelObjectsTracker.priority'
-        db.delete_column(u'hello_modelobjectstracker', 'priority')
+        # Deleting field 'IncomingRequest.priority'
+        db.delete_column(u'hello_incomingrequest', 'priority')
 
 
     models = {
@@ -60,6 +60,7 @@ class Migration(SchemaMigration):
             'Meta': {'object_name': 'IncomingRequest'},
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'path': ('django.db.models.fields.CharField', [], {'max_length': '500'}),
+            'priority': ('django.db.models.fields.PositiveSmallIntegerField', [], {'default': '0'}),
             'visiting_date': ('django.db.models.fields.DateTimeField', [], {'auto_now': 'True', 'blank': 'True'})
         },
         u'hello.modelobjectstracker': {
@@ -67,7 +68,6 @@ class Migration(SchemaMigration):
             'created_date': ('django.db.models.fields.DateTimeField', [], {'default': 'datetime.datetime(2014, 8, 18, 0, 0)'}),
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'model_name': ('django.db.models.fields.CharField', [], {'max_length': '50'}),
-            'priority': ('django.db.models.fields.PositiveSmallIntegerField', [], {'default': '0'}),
             'type_of_event': ('django.db.models.fields.CharField', [], {'max_length': '10'})
         },
         u'hello.person': {
