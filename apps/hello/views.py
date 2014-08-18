@@ -35,7 +35,7 @@ def index(request, person_id=1):
 
 
 def view_requests(request):
-    stored_requests = IncomingRequest.objects.order_by('visiting_date')[0:10]
+    stored_requests = IncomingRequest.objects.order_by('visiting_date')
     request_context = RequestContext(
         request,
         {REQUESTS_RESPONSE_KEYWORD: stored_requests})

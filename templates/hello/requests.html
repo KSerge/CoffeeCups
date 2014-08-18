@@ -9,10 +9,12 @@
 <h1>42 Coffee Cups Test Assignment</h1>
 
 {% if requests %}
-    <h4>Requests:</h4>
+<h4>Requests:</h4>
+<div class="requests-area">
     {% for record in requests %}
     <p>'{{ record.path }}' requested at: {{record.visiting_date}}</p>
     {% endfor %}
+</div>
 {% else %}
     <h4>There are no Requests srored in DB yet:</h4>
 {% endif %}

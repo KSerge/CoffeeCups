@@ -68,3 +68,10 @@ div.command-buttons{
     -ms-filter: “alpha(opacity=70)”; /* ie 8 */
     filter: alpha(opacity=70);/* ie lt 7 */
 }
+.requests-area{
+    border: 1px solid #778899;
+    display: inline-block;
+    height: 400px;
+    overflow: auto;
+    width: 500px;
+}
