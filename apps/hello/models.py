@@ -23,11 +23,22 @@ class IncomingRequest(models.Model):
     visiting_date = models.DateTimeField(auto_now=True)
     priority = models.PositiveSmallIntegerField(default=0)
 
+    def save(self, *args, **kwargs):
+        if not self.pk:
+            similar_requests = IncomingRequest.objects.filter(path=self.path)
+            if similar_requests.count() == 0:
+                priority = 0
+            else:
+                priority = similar_requests[0].priority
+            self.priority = priority
+        super(IncomingRequest, self).save(*args, **kwargs)
+
 
 class ModelObjectsTracker(models.Model):
     model_name = models.CharField(max_length=50, null=False, blank=False)
     type_of_event = models.CharField(max_length=10, null=False, blank=False)
     created_date = models.DateTimeField(default=timezone.now())
+
 
 MODEL_NAMES = (Person.__name__, IncomingRequest.__name__,)
 

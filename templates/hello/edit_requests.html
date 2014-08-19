@@ -10,18 +10,23 @@
 
 {% if requests %}
 <h4>Requests:</h4>
-<div class="requests-area">
-    {% for record in requests %}
-    <p>URL: {{record.path}} Priority: {{record.priority}}</p>
-    {% endfor %}
-</div>
-{% for form in formset %}
-    {{ form.id }}
-    <div class="inline {{ instruction_form.prefix }}">
-        {{ form.path.errors }}
-        {{ form.path }}
+<form method="post" action="">
+    {% csrf_token %}
+    {{ formset.management_form }}
+    <table>
+        {% for form in formset %}
+        <p>
+            {{ form.path.errors }}
+            {{ form.path }}
+            {{ form.priority.errors }}
+            {{ form.priority }}
+        </p>
+        {% endfor %}
+    </table>
+    <div class="command-buttons">
+        <input type="submit" value="Save" />
     </div>
-{% endfor %}
+</form>
 {% else %}
     <h4>There are no Requests srored in DB yet:</h4>
 {% endif %}

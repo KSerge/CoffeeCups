@@ -1,10 +1,12 @@
-from django.forms import ModelForm, Textarea, PasswordInput, Select
+from django.forms import ModelForm, Textarea, PasswordInput
 from .models import Person, IncomingRequest
 from django.contrib.auth.models import User
 from .widjets import CalendarWidget
-from django.forms.models import modelformset_factory
+from django.forms import Form, CharField, ChoiceField
+from django.forms.formsets import formset_factory
 
-CHOICES = ('1', '2',)
+distinct_requests = IncomingRequest.objects.values('path').distinct()
+CHOICES = [(n, n) for n in xrange(0, distinct_requests.count())]
 
 
 class PersonForm(ModelForm):
@@ -33,13 +35,8 @@ class UserEditForm(UserForm):
         exclude = ('username', 'password',)
 
 
-class IncomingRequestForm(ModelForm):
-    class Meta:
-        model = IncomingRequest
-        fields = ('path', 'priority')
-        widgets = {
-            'priority': Select(choices=CHOICES)
-        }
+class IncomingRequestForm(Form):
+    path = CharField()
+    priority = ChoiceField(choices=CHOICES)
 
-IncomingRequestFormSet = modelformset_factory(IncomingRequest, form=IncomingRequestForm)
-# IncomingRequestFormSet = modelformset_factory(IncomingRequest)
+IncomingRequestFormset = formset_factory(IncomingRequestForm, extra=0)

@@ -2,7 +2,7 @@ from django.shortcuts import render, get_object_or_404
 from django.template import RequestContext
 from .models import Person, IncomingRequest
 from django.conf import settings
-from .forms import PersonForm, UserForm, UserEditForm, IncomingRequestFormSet
+from .forms import PersonForm, UserForm, UserEditForm, IncomingRequestFormset
 from django.http import HttpResponseRedirect, HttpResponse
 from django.core.urlresolvers import reverse
 from django.contrib.auth import authenticate, login, logout
@@ -35,7 +35,7 @@ def index(request, person_id=1):
 
 
 def view_requests(request):
-    stored_requests = IncomingRequest.objects.order_by('visiting_date')
+    stored_requests = IncomingRequest.objects.order_by('priority', 'visiting_date')
     request_context = RequestContext(
         request,
         {REQUESTS_RESPONSE_KEYWORD: stored_requests})
@@ -43,9 +43,24 @@ def view_requests(request):
 
 
 def edit_requests(request):
-    distinct_requests = IncomingRequest.objects.values('path', 'priority').distinct()
-    formset = IncomingRequestFormSet(queryset=IncomingRequest.objects.values('path').distinct())
-    # requests_formset = modelformset_factory(queryset=IncomingRequest.objects.values('path', 'priority').distinct())
+    distinct_requests = IncomingRequest.objects.values('path').distinct()
+    initial_data = []
+    for record in distinct_requests:
+        initial_data.append({'path': record['path']})
+    formset = IncomingRequestFormset(initial=initial_data)
+
+    if request.method == 'POST':
+        formset = IncomingRequestFormset(request.POST)
+        if formset.is_valid():
+            priority_dict = {}
+            for item in formset.cleaned_data:
+                priority_dict[item['path']] = item['priority']
+            requests = IncomingRequest.objects.all()
+            for item in requests:
+                item.priority = priority_dict.get(item.path, 0)
+                item.save()
+            return HttpResponseRedirect(reverse('requests'))
+
     request_context = RequestContext(
         request,
         {REQUESTS_RESPONSE_KEYWORD: distinct_requests, 'formset': formset},)
