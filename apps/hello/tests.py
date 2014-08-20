@@ -123,30 +123,30 @@ class HelloAppTestCase(TestCase):
         self.assertTrue(REQUESTS_RESPONSE_KEYWORD in response.context)
         self.assertTrue('<h4>Requests:</h4>' in response.content)
 
-    # #This test fails on getBarista
-    # def test_model_signals(self):
-    #     tracking_objects = ModelObjectsTracker.objects.filter(
-    #         model_name=Person.__name__,
-    #         type_of_event=CREATE_ACTION_NAME)
-    #     self.assertTrue(tracking_objects.count() == 1)
-    #     person = Person.objects.get(pk=1)
-    #     person.skype = 'Skype Account'
-    #     person.save()
-    #     tracking_objects = ModelObjectsTracker.objects.filter(
-    #         model_name=Person.__name__,
-    #         type_of_event=EDIT_ACTION_NAME)
-    #     self.assertTrue(tracking_objects.count() == 1)
-    #     person.delete()
-    #     tracking_objects = ModelObjectsTracker.objects.filter(
-    #         model_name=Person.__name__,
-    #         type_of_event=DELETE_ACTION_NAME)
-    #     self.assertTrue(tracking_objects.count() == 1)
-    #
-    # #This test fails on getBarista
-    # def test_context_processor(self):
-    #     url = reverse('index')
-    #     response = self.client.get(url)
-    #     self.assertTrue(CONTEXT_SETTINGS_KEYWORD in response.context)
-    #     url = reverse('requests')
-    #     response = self.client.get(url)
-    #     self.assertTrue(CONTEXT_SETTINGS_KEYWORD in response.context)
+    #This test fails on getBarista
+    def test_model_signals(self):
+        tracking_objects = ModelObjectsTracker.objects.filter(
+            model_name=Person.__name__,
+            type_of_event=CREATE_ACTION_NAME)
+        self.assertTrue(tracking_objects.count() == 1)
+        person = Person.objects.get(pk=1)
+        person.skype = 'Skype Account'
+        person.save()
+        tracking_objects = ModelObjectsTracker.objects.filter(
+            model_name=Person.__name__,
+            type_of_event=EDIT_ACTION_NAME)
+        self.assertTrue(tracking_objects.count() == 1)
+        person.delete()
+        tracking_objects = ModelObjectsTracker.objects.filter(
+            model_name=Person.__name__,
+            type_of_event=DELETE_ACTION_NAME)
+        self.assertTrue(tracking_objects.count() == 1)
+
+    #This test fails on getBarista
+    def test_context_processor(self):
+        url = reverse('index')
+        response = self.client.get(url)
+        self.assertTrue(CONTEXT_SETTINGS_KEYWORD in response.context)
+        url = reverse('requests')
+        response = self.client.get(url)
+        self.assertTrue(CONTEXT_SETTINGS_KEYWORD in response.context)
