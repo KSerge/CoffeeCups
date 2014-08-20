@@ -81,7 +81,7 @@ class HelloAppTestCase(TestCase):
         url = reverse('login')
         response = self.client.post(url, {'username': TEST_USERNAME, 'password': TEST_PASSWORD})
         self.assertIn(
-            INVALID_LOGIN_MESSAGE.format(TEST_USERNAME, TEST_PASSWORD) in response.content)
+            INVALID_LOGIN_MESSAGE.format(TEST_USERNAME, TEST_PASSWORD), response.content)
 
     def test_edit_link_for_not_auth_user(self):
         user = User.objects.get(pk=2)
@@ -103,6 +103,26 @@ class HelloAppTestCase(TestCase):
         link = '<a href="{0}">Edit</a>'.format(reverse('edit', kwargs={'person_id': person.id}))
         self.assertTrue(link in response.content)
 
+    #This test fails on getBarista
+    def test_request_is_stored_to_db(self):
+        url = reverse('index')
+        response = self.client.get(url)
+        url = reverse('requests')
+        response = self.client.get(url)
+        requests = IncomingRequest.objects.filter(path=reverse('index'))
+        self.assertTrue(requests.count() == 1)
+        requests = IncomingRequest.objects.filter(path=reverse('requests'))
+        self.assertTrue(requests.count() == 1)
+
+    #This test fails on getBarista
+    def test_request_view(self):
+        url = reverse('index')
+        response = self.client.get(url)
+        url = reverse('requests')
+        response = self.client.get(url)
+        self.assertTrue(REQUESTS_RESPONSE_KEYWORD in response.context)
+        self.assertTrue('<h4>Requests:</h4>' in response.content)
+
     # #This test fails on getBarista
     # def test_model_signals(self):
     #     tracking_objects = ModelObjectsTracker.objects.filter(
@@ -121,26 +141,6 @@ class HelloAppTestCase(TestCase):
     #         model_name=Person.__name__,
     #         type_of_event=DELETE_ACTION_NAME)
     #     self.assertTrue(tracking_objects.count() == 1)
-    #
-    # #This test fails on getBarista
-    # def test_request_is_stored_to_db(self):
-    #     url = reverse('index')
-    #     response = self.client.get(url)
-    #     url = reverse('requests')
-    #     response = self.client.get(url)
-    #     requests = IncomingRequest.objects.filter(path=reverse('index'))
-    #     self.assertTrue(requests.count() == 1)
-    #     requests = IncomingRequest.objects.filter(path=reverse('requests'))
-    #     self.assertTrue(requests.count() == 1)
-    #
-    # #This test fails on getBarista
-    # def test_request_view(self):
-    #     url = reverse('index')
-    #     response = self.client.get(url)
-    #     url = reverse('requests')
-    #     response = self.client.get(url)
-    #     self.assertTrue(REQUESTS_RESPONSE_KEYWORD in response.context)
-    #     self.assertTrue('<h4>Requests:</h4>' in response.content)
     #
     # #This test fails on getBarista
     # def test_context_processor(self):
