@@ -55,7 +55,8 @@ def register_user(request):
             person = person_form.save(commit=False)
             person.user = user
             person.save()
-            return HttpResponseRedirect(reverse('view_person', kwargs={'person_id': person.id}))
+            return HttpResponseRedirect(
+                reverse('view_person', kwargs={'person_id': person.id}))
         else:
             message = SAVE_FORM_ERRORS_MESSAGE
     else:
@@ -84,7 +85,8 @@ def login_user(request):
             if user.is_active:
                 login(request, user)
                 person = get_object_or_404(Person, user_id=user.id)
-                return HttpResponseRedirect(reverse('view_person', kwargs={'person_id': person.id}))
+                return HttpResponseRedirect(
+                    reverse('view_person', kwargs={'person_id': person.id}))
             else:
                 message = "Your account is disabled"
         else:
@@ -120,7 +122,8 @@ def edit(request, person_id=0):
                 data = {}
                 data['redirect_url'] = reverse('view_person', kwargs={'person_id': person.id})
                 return HttpResponse(json.dumps(data), content_type="application/json")
-            return HttpResponseRedirect(reverse('view_person', kwargs={'person_id': person.id}))
+            return HttpResponseRedirect(
+                reverse('view_person', kwargs={'person_id': person.id}))
         else:
             message = SAVE_FORM_ERRORS_MESSAGE
     else:

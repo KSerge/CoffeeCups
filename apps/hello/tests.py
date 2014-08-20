@@ -1,7 +1,8 @@
 from django.test import TestCase
 from django.core.urlresolvers import reverse
 from django.contrib.auth.models import User
-from .models import *
+from .models import Person, IncomingRequest, ModelObjectsTracker
+from .models import CREATE_ACTION_NAME, EDIT_ACTION_NAME, DELETE_ACTION_NAME
 from .views import PERSON_RESPONSE_KEYWORD, REQUESTS_RESPONSE_KEYWORD, CONTEXT_SETTINGS_KEYWORD
 from .views import SAVE_FORM_ERRORS_MESSAGE, INVALID_LOGIN_MESSAGE
 
@@ -79,7 +80,8 @@ class HelloAppTestCase(TestCase):
     def test_login_post_not_valid_view(self):
         url = reverse('login')
         response = self.client.post(url, {'username': TEST_USERNAME, 'password': TEST_PASSWORD})
-        self.assertTrue(INVALID_LOGIN_MESSAGE.format(TEST_USERNAME, TEST_PASSWORD) in response.content)
+        self.assertIn(
+            INVALID_LOGIN_MESSAGE.format(TEST_USERNAME, TEST_PASSWORD) in response.content)
 
     def test_edit_link_for_not_auth_user(self):
         user = User.objects.get(pk=2)

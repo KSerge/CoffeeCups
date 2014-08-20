@@ -7,7 +7,6 @@ from .widjets import CalendarWidget
 class PersonForm(ModelForm):
     class Meta:
         model = Person
-        fields = '__all__'
         fields = ('bio', 'other_contacts', 'date_of_birth', 'jabber', 'skype', 'profile_image')
         widgets = {
             'bio': Textarea(attrs={'cols': 50, 'rows': 5, 'maxlength': 250}),
