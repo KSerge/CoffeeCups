@@ -21,14 +21,14 @@ class HelloAppTestCase(TestCase):
         url = reverse('default')
         response = self.client.get(url)
         self.assertTrue(response.context['person'].user.first_name == 'Serhij')
-        self.assertTrue('<h1>42 Coffee Cups Test Assignment</h1>' in response.content)
+        self.assertIn('<h1>42 Coffee Cups Test Assignment</h1>', response.content)
 
     def test_index_view(self):
         url = reverse('index')
         response = self.client.get(url)
-        self.assertTrue(PERSON_RESPONSE_KEYWORD in response.context)
+        self.assertIn(PERSON_RESPONSE_KEYWORD, response.context)
         self.assertTrue(response.context[PERSON_RESPONSE_KEYWORD].user.first_name == 'Serhij')
-        self.assertTrue('<h1>42 Coffee Cups Test Assignment</h1>' in response.content)
+        self.assertIn('<h1>42 Coffee Cups Test Assignment</h1>', response.content)
 
     def test_register_post_valid_view(self):
         url = reverse('register')
@@ -43,7 +43,7 @@ class HelloAppTestCase(TestCase):
     def test_edit_get_view(self):
         url = reverse('view_person', kwargs={'person_id': 1})
         response = self.client.get(url)
-        self.assertTrue(PERSON_RESPONSE_KEYWORD in response.context)
+        self.assertIn(PERSON_RESPONSE_KEYWORD, response.context)
         self.assertTrue(response.context[PERSON_RESPONSE_KEYWORD].user.first_name == 'Serhij')
 
     def test_edit_post_valid_view(self):
@@ -59,7 +59,7 @@ class HelloAppTestCase(TestCase):
     def test_edit_post_not_valid_view(self):
         url = reverse('edit', kwargs={'person_id': 1})
         response = self.client.post(url, {'date_of_birth': True})
-        self.assertTrue(SAVE_FORM_ERRORS_MESSAGE in response.content)
+        self.assertIn(SAVE_FORM_ERRORS_MESSAGE, response.content)
 
     def test_login_post_valid_view(self):
         url = reverse('register')
@@ -79,7 +79,7 @@ class HelloAppTestCase(TestCase):
     def test_login_post_not_valid_view(self):
         url = reverse('login')
         response = self.client.post(url, {'username': TEST_USERNAME, 'password': TEST_PASSWORD})
-        self.assertTrue(INVALID_LOGIN_MESSAGE.format(TEST_USERNAME, TEST_PASSWORD) in response.content)
+        self.assertIn(INVALID_LOGIN_MESSAGE.format(TEST_USERNAME, TEST_PASSWORD), response.content)
 
     def test_edit_link_for_not_auth_user(self):
         user = User.objects.get(pk=2)
@@ -87,7 +87,7 @@ class HelloAppTestCase(TestCase):
         url = reverse('view_person',  kwargs={'person_id': person.id})
         response = self.client.get(url)
         link = '<a href="{0}">Edit</a>'.format(reverse('edit', kwargs={'person_id': person.id}))
-        self.assertFalse(link in response.content)
+        self.assertNotIn(link, response.content)
 
     def test_edit_link_for_auth_user(self):
         url = reverse('register')
@@ -99,7 +99,7 @@ class HelloAppTestCase(TestCase):
         url = reverse('view_person',  kwargs={'person_id': person.id})
         response = self.client.get(url)
         link = '<a href="{0}">Edit</a>'.format(reverse('edit', kwargs={'person_id': person.id}))
-        self.assertTrue(link in response.content)
+        self.assertIn(link, response.content)
 
     #This test fails on getBarista
     def test_model_signals(self):
@@ -137,14 +137,27 @@ class HelloAppTestCase(TestCase):
         response = self.client.get(url)
         url = reverse('requests')
         response = self.client.get(url)
-        self.assertTrue(REQUESTS_RESPONSE_KEYWORD in response.context)
-        self.assertTrue('<h4>Requests:</h4>' in response.content)
+        self.assertIn(REQUESTS_RESPONSE_KEYWORD, response.context)
+        self.assertIn('<h4>Requests:</h4>', response.content)
 
     #This test fails on getBarista
     def test_context_processor(self):
         url = reverse('index')
         response = self.client.get(url)
-        self.assertTrue(CONTEXT_SETTINGS_KEYWORD in response.context)
+        self.assertIn(CONTEXT_SETTINGS_KEYWORD, response.context)
         url = reverse('requests')
         response = self.client.get(url)
-        self.assertTrue(CONTEXT_SETTINGS_KEYWORD in response.context)
+        self.assertIn(CONTEXT_SETTINGS_KEYWORD, response.context)
+
+    def test_edit_requests_distinct_data(self):
+        url = reverse('index')
+        response = self.client.get(url)
+        response = self.client.get(url)
+        url = reverse('requests')
+        response = self.client.get(url)
+        response = self.client.get(url)
+        url = reverse('edit_requests')
+        response = self.client.get(url)
+        self.assertTemplateUsed(response, 'hello/edit_requests.html')
+        self.assertIn('formset', response.context)
+        self.assertTrue(response.context['formset'].total_form_count() == 3)
