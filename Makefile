@@ -1,4 +1,4 @@
-MANAGE=django-admin.py
+MANAGE=manage.py
 SETTINGS=fortytwo_test_task.settings
 
 test:
