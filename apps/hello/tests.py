@@ -27,7 +27,7 @@ class HelloAppTestCase(TestCase):
         response = self.client.get(url)
         self.assertTrue('person' in response.context)
         self.assertTrue(response.context['person'].user.first_name == 'Serhij')
-        self.assertTrue('<h1>42 Coffee Cups Test Assignment</h1>' in response.content)
+        self.assertIn('<h1>42 Coffee Cups Test Assignment</h1>', response.content)
 
     def test_register_post_valid_view(self):
         url = reverse('register')
@@ -42,7 +42,7 @@ class HelloAppTestCase(TestCase):
     def test_edit_get_view(self):
         url = reverse('view_person', kwargs={'person_id': 1})
         response = self.client.get(url)
-        self.assertTrue('person' in response.context)
+        self.assertIn('person', response.context)
         self.assertTrue(response.context['person'].user.first_name == 'Serhij')
 
     def test_edit_post_valid_view(self):
@@ -58,7 +58,7 @@ class HelloAppTestCase(TestCase):
     def test_edit_post_not_valid_view(self):
         url = reverse('edit', kwargs={'person_id': 1})
         response = self.client.post(url, {'date_of_birth': True})
-        self.assertTrue(SAVE_FORM_ERRORS_MESSAGE in response.content)
+        self.assertIn(SAVE_FORM_ERRORS_MESSAGE, response.content)
 
     def test_login_post_valid_view(self):
         url = reverse('register')
@@ -87,7 +87,7 @@ class HelloAppTestCase(TestCase):
         url = reverse('view_person',  kwargs={'person_id': person.id})
         response = self.client.get(url)
         link = '<a href="{0}">Edit</a>'.format(reverse('edit', kwargs={'person_id': person.id}))
-        self.assertFalse(link in response.content)
+        self.assertNotIn(link, response.content)
 
     def test_edit_link_for_auth_user(self):
         url = reverse('register')
@@ -99,7 +99,7 @@ class HelloAppTestCase(TestCase):
         url = reverse('view_person',  kwargs={'person_id': person.id})
         response = self.client.get(url)
         link = '<a href="{0}">Edit</a>'.format(reverse('edit', kwargs={'person_id': person.id}))
-        self.assertTrue(link in response.content)
+        self.assertIn(link, response.content)
 
     #This test fails on getBarista
     def test_request_is_stored_to_db(self):
@@ -118,8 +118,8 @@ class HelloAppTestCase(TestCase):
         response = self.client.get(url)
         url = reverse('requests')
         response = self.client.get(url)
-        self.assertTrue('requests' in response.context)
-        self.assertTrue('<h4>Requests:</h4>' in response.content)
+        self.assertIn('requests', response.context)
+        self.assertIn('<h4>Requests:</h4>', response.content)
 
     #This test fails on getBarista
     def test_model_signals(self):
@@ -144,7 +144,7 @@ class HelloAppTestCase(TestCase):
     def test_context_processor(self):
         url = reverse('index')
         response = self.client.get(url)
-        self.assertTrue('settings' in response.context)
+        self.assertIn('settings', response.context)
         url = reverse('requests')
         response = self.client.get(url)
-        self.assertTrue('settings' in response.context)
+        self.assertIn('settings', response.context)
