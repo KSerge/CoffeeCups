@@ -3,7 +3,6 @@ from django.core.urlresolvers import reverse
 from django.contrib.auth.models import User
 from .models import Person, IncomingRequest, ModelObjectsTracker
 from .models import CREATE_ACTION_NAME, EDIT_ACTION_NAME, DELETE_ACTION_NAME
-from .views import PERSON_RESPONSE_KEYWORD, REQUESTS_RESPONSE_KEYWORD, CONTEXT_SETTINGS_KEYWORD
 from .views import SAVE_FORM_ERRORS_MESSAGE, INVALID_LOGIN_MESSAGE
 
 TEST_SKYPE_NAME = 'New Skype Name'
@@ -21,14 +20,13 @@ class HelloAppTestCase(TestCase):
     def test_default_view(self):
         url = reverse('default')
         response = self.client.get(url)
-        self.assertTrue(response.context['person'].user.first_name == 'Serhij')
-        self.assertTrue('<h1>42 Coffee Cups Test Assignment</h1>' in response.content)
+        self.assertRedirects(response, reverse('index'), status_code=301, target_status_code=200)
 
     def test_index_view(self):
         url = reverse('index')
         response = self.client.get(url)
-        self.assertTrue(PERSON_RESPONSE_KEYWORD in response.context)
-        self.assertTrue(response.context[PERSON_RESPONSE_KEYWORD].user.first_name == 'Serhij')
+        self.assertTrue('person' in response.context)
+        self.assertTrue(response.context['person'].user.first_name == 'Serhij')
         self.assertTrue('<h1>42 Coffee Cups Test Assignment</h1>' in response.content)
 
     def test_register_post_valid_view(self):
@@ -44,8 +42,8 @@ class HelloAppTestCase(TestCase):
     def test_edit_get_view(self):
         url = reverse('view_person', kwargs={'person_id': 1})
         response = self.client.get(url)
-        self.assertTrue(PERSON_RESPONSE_KEYWORD in response.context)
-        self.assertTrue(response.context[PERSON_RESPONSE_KEYWORD].user.first_name == 'Serhij')
+        self.assertTrue('person' in response.context)
+        self.assertTrue(response.context['person'].user.first_name == 'Serhij')
 
     def test_edit_post_valid_view(self):
         url = reverse('edit', kwargs={'person_id': 1})
@@ -120,7 +118,7 @@ class HelloAppTestCase(TestCase):
         response = self.client.get(url)
         url = reverse('requests')
         response = self.client.get(url)
-        self.assertTrue(REQUESTS_RESPONSE_KEYWORD in response.context)
+        self.assertTrue('requests' in response.context)
         self.assertTrue('<h4>Requests:</h4>' in response.content)
 
     #This test fails on getBarista
@@ -146,7 +144,7 @@ class HelloAppTestCase(TestCase):
     def test_context_processor(self):
         url = reverse('index')
         response = self.client.get(url)
-        self.assertTrue(CONTEXT_SETTINGS_KEYWORD in response.context)
+        self.assertTrue('settings' in response.context)
         url = reverse('requests')
         response = self.client.get(url)
-        self.assertTrue(CONTEXT_SETTINGS_KEYWORD in response.context)
+        self.assertTrue('settings' in response.context)

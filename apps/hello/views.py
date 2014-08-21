@@ -10,16 +10,13 @@ from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 import json
 
-PERSON_RESPONSE_KEYWORD = 'person'
-REQUESTS_RESPONSE_KEYWORD = 'requests'
-CONTEXT_SETTINGS_KEYWORD = 'settings'
 SAVE_FORM_ERRORS_MESSAGE = 'Some Errors Occurred'
 INVALID_LOGIN_MESSAGE = 'Invalid login details: {0}, {1}'
 
 
 def context_processor(request):
     return {
-        CONTEXT_SETTINGS_KEYWORD: settings,
+        'settings': settings,
     }
 
 
@@ -30,7 +27,7 @@ def index(request, person_id=1):
         person = Person()
     request_context = RequestContext(
         request,
-        {PERSON_RESPONSE_KEYWORD: person})
+        {'person': person})
     return render(request, 'hello/index.html', request_context)
 
 
@@ -38,7 +35,7 @@ def view_requests(request):
     stored_requests = IncomingRequest.objects.order_by('visiting_date')[0:10]
     request_context = RequestContext(
         request,
-        {REQUESTS_RESPONSE_KEYWORD: stored_requests})
+        {'requests': stored_requests})
     return render(request, 'hello/requests.html', request_context)
 
 
