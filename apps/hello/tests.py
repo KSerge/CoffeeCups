@@ -75,6 +75,14 @@ class HelloAppTestCase(TestCase):
                              target_status_code=200,
                              )
 
+    def test_login_admin_view(self):
+        url = reverse('login')
+        response = self.client.post(url, {'username': 'admin', 'password': 'admin'})
+        self.assertRedirects(response,
+                             '/admin/',
+                             status_code=302,
+                             target_status_code=200)
+
     def test_login_post_not_valid_view(self):
         url = reverse('login')
         response = self.client.post(url, {'username': TEST_USERNAME, 'password': TEST_PASSWORD})
