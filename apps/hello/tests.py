@@ -78,8 +78,7 @@ class HelloAppTestCase(TestCase):
     def test_login_post_not_valid_view(self):
         url = reverse('login')
         response = self.client.post(url, {'username': TEST_USERNAME, 'password': TEST_PASSWORD})
-        self.assertIn(
-            INVALID_LOGIN_MESSAGE.format(TEST_USERNAME, TEST_PASSWORD), response.content)
+        self.assertIn(INVALID_LOGIN_MESSAGE, response.content)
 
     def test_edit_link_for_not_auth_user(self):
         user = User.objects.get(pk=2)
