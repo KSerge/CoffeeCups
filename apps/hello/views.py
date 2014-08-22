@@ -81,9 +81,14 @@ def login_user(request):
         if user:
             if user.is_active:
                 login(request, user)
-                person = get_object_or_404(Person, user_id=user.id)
-                return HttpResponseRedirect(
-                    reverse('view_person', kwargs={'person_id': person.id}))
+                if user.is_superuser:
+                    return HttpResponseRedirect('/admin/')
+                try:
+                    person = Person.objects.get(user_id=user.id)
+                    return HttpResponseRedirect(
+                        reverse('view_person', kwargs={'person_id': person.id}))
+                except Person.DoesNotExist:
+                    return HttpResponseRedirect(reverse('index'))
             else:
                 message = "Your account is disabled"
         else:
