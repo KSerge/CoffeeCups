@@ -11,7 +11,7 @@ from django.contrib.auth.decorators import login_required
 import json
 
 SAVE_FORM_ERRORS_MESSAGE = 'Some Errors Occurred'
-INVALID_LOGIN_MESSAGE = 'Invalid login details: {0}, {1}'
+INVALID_LOGIN_MESSAGE = 'Invalid login details'
 
 
 def context_processor(request):
@@ -87,7 +87,7 @@ def login_user(request):
             else:
                 message = "Your account is disabled"
         else:
-            message = INVALID_LOGIN_MESSAGE.format(username, password)
+            message = INVALID_LOGIN_MESSAGE
     else:
         user_form = UserForm()
 
