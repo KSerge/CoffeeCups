@@ -4,6 +4,8 @@ from django.contrib.auth.models import User
 from .models import Person, IncomingRequest, ModelObjectsTracker
 from .models import CREATE_ACTION_NAME, EDIT_ACTION_NAME, DELETE_ACTION_NAME
 from .views import SAVE_FORM_ERRORS_MESSAGE, INVALID_LOGIN_MESSAGE
+from django.conf import settings
+import os
 
 TEST_SKYPE_NAME = 'New Skype Name'
 TEST_USERNAME = 'Username'
@@ -46,14 +48,24 @@ class HelloAppTestCase(TestCase):
         self.assertTrue(response.context['person'].user.first_name == 'Serhij')
 
     def test_edit_post_valid_view(self):
+        file_path = os.path.join(settings.BASE_DIR, 'apps', 'hello', 'test_image.png')
+        f = open(file_path, 'r')
+        post_data = {'profile_image': f, 'skype': TEST_SKYPE_NAME}
         url = reverse('edit', kwargs={'person_id': 1})
-        response = self.client.post(url, {'skype': TEST_SKYPE_NAME})
+        response = self.client.post(url, post_data)
         self.assertRedirects(response,
                              reverse('view_person', kwargs={'person_id': 1}),
                              status_code=302,
                              target_status_code=200,
                              )
         self.assertTrue(Person.objects.get(pk=1).skype == TEST_SKYPE_NAME)
+        f.close()
+        uploaded_file_path = os.path.join(settings.BASE_DIR,
+                                          'uploads',
+                                          'profile',
+                                          'test_image.png')
+        self.assertTrue(os.path.isfile(uploaded_file_path))
+        os.remove(uploaded_file_path)
 
     def test_edit_post_not_valid_view(self):
         url = reverse('edit', kwargs={'person_id': 1})
