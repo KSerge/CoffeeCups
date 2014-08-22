@@ -15,7 +15,7 @@ $(document).ready(function () {
         $.ajax({
             url : $(this).attr("action"),
             type: "POST",
-            data : $(this).serializeArray(),
+            data : new FormData($(this)[0]),
             success:function(data, textStatus, jqXHR){
                 $('#overlay').hide();
                 $('#overlayContent').hide();
