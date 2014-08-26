@@ -41,20 +41,14 @@ class HelloAppTestCase(TestCase):
         response = self.client.post(url, {'username': TEST_USERNAME})
         self.assertTrue(User.objects.filter(username=TEST_USERNAME).count() == 0)
 
-    def test_edit_get_view(self):
-        url = reverse('view_person', kwargs={'person_id': 1})
-        response = self.client.get(url)
-        self.assertIn('person', response.context)
-        self.assertTrue(response.context['person'].user.first_name == 'Serhij')
-
     def test_edit_post_valid_view(self):
         file_path = os.path.join(settings.BASE_DIR, 'apps', 'hello', 'test_image.png')
         f = open(file_path, 'r')
         post_data = {'profile_image': f, 'skype': TEST_SKYPE_NAME}
-        url = reverse('edit', kwargs={'person_id': 1})
+        url = reverse('edit')
         response = self.client.post(url, post_data)
         self.assertRedirects(response,
-                             reverse('view_person', kwargs={'person_id': 1}),
+                             reverse('index'),
                              status_code=302,
                              target_status_code=200,
                              )
@@ -68,7 +62,7 @@ class HelloAppTestCase(TestCase):
         os.remove(uploaded_file_path)
 
     def test_edit_post_not_valid_view(self):
-        url = reverse('edit', kwargs={'person_id': 1})
+        url = reverse('edit')
         response = self.client.post(url, {'date_of_birth': True})
         self.assertIn(SAVE_FORM_ERRORS_MESSAGE, response.content)
 
@@ -80,20 +74,10 @@ class HelloAppTestCase(TestCase):
         user = User.objects.get(username=TEST_USERNAME)
         person = Person.objects.get(user_id=user.id)
         self.assertRedirects(response,
-                             reverse(
-                                 'view_person',
-                                 kwargs={'person_id': person.id}),
+                             reverse('index'),
                              status_code=302,
                              target_status_code=200,
                              )
-
-    def test_login_admin_view(self):
-        url = reverse('login')
-        response = self.client.post(url, {'username': 'admin', 'password': 'admin'})
-        self.assertRedirects(response,
-                             '/admin/',
-                             status_code=302,
-                             target_status_code=200)
 
     def test_login_post_not_valid_view(self):
         url = reverse('login')
@@ -103,9 +87,9 @@ class HelloAppTestCase(TestCase):
     def test_edit_link_for_not_auth_user(self):
         user = User.objects.get(pk=2)
         person = Person.objects.get(user_id=user.id)
-        url = reverse('view_person',  kwargs={'person_id': person.id})
+        url = reverse('index')
         response = self.client.get(url)
-        link = '<a href="{0}">Edit</a>'.format(reverse('edit', kwargs={'person_id': person.id}))
+        link = '<a href="{0}">Edit</a>'.format(reverse('edit'))
         self.assertNotIn(link, response.content)
 
     def test_edit_link_for_auth_user(self):
@@ -115,12 +99,11 @@ class HelloAppTestCase(TestCase):
         response = self.client.post(url, {'username': TEST_USERNAME, 'password': TEST_PASSWORD})
         user = User.objects.get(username=TEST_USERNAME)
         person = Person.objects.get(user_id=user.id)
-        url = reverse('view_person',  kwargs={'person_id': person.id})
+        url = reverse('index')
         response = self.client.get(url)
-        link = '<a href="{0}">Edit</a>'.format(reverse('edit', kwargs={'person_id': person.id}))
+        link = '<a href="{0}">Edit</a>'.format(reverse('edit'))
         self.assertIn(link, response.content)
 
-    #This test fails on getBarista
     def test_request_is_stored_to_db(self):
         url = reverse('index')
         response = self.client.get(url)
@@ -131,7 +114,6 @@ class HelloAppTestCase(TestCase):
         requests = IncomingRequest.objects.filter(path=reverse('requests'))
         self.assertTrue(requests.count() == 1)
 
-    #This test fails on getBarista
     def test_request_view(self):
         url = reverse('index')
         response = self.client.get(url)
@@ -140,7 +122,6 @@ class HelloAppTestCase(TestCase):
         self.assertIn('requests', response.context)
         self.assertIn('<h4>Requests:</h4>', response.content)
 
-    #This test fails on getBarista
     def test_model_signals(self):
         tracking_objects = ModelObjectsTracker.objects.filter(
             model_name=Person.__name__,
@@ -159,7 +140,6 @@ class HelloAppTestCase(TestCase):
             type_of_event=DELETE_ACTION_NAME)
         self.assertTrue(tracking_objects.count() == 1)
 
-    #This test fails on getBarista
     def test_context_processor(self):
         url = reverse('index')
         response = self.client.get(url)

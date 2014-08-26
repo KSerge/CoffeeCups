@@ -52,8 +52,7 @@ def register_user(request):
             person = person_form.save(commit=False)
             person.user = user
             person.save()
-            return HttpResponseRedirect(
-                reverse('view_person', kwargs={'person_id': person.id}))
+            return HttpResponseRedirect(reverse('index'))
         else:
             message = SAVE_FORM_ERRORS_MESSAGE
     else:
@@ -81,14 +80,7 @@ def login_user(request):
         if user:
             if user.is_active:
                 login(request, user)
-                if user.is_superuser:
-                    return HttpResponseRedirect('/admin/')
-                try:
-                    person = Person.objects.get(user_id=user.id)
-                    return HttpResponseRedirect(
-                        reverse('view_person', kwargs={'person_id': person.id}))
-                except Person.DoesNotExist:
-                    return HttpResponseRedirect(reverse('index'))
+                return HttpResponseRedirect(reverse('index'))
             else:
                 message = "Your account is disabled"
         else:
@@ -106,9 +98,9 @@ def login_user(request):
     return render(request, 'hello/login.html', request_context)
 
 
-def edit(request, person_id=0):
+def edit(request):
     try:
-        person = Person.objects.get(pk=person_id)
+        person = Person.objects.get(pk=1)
         user = User.objects.get(pk=person.user_id)
     except Person.DoesNotExist, User.DoesNotExists:
         person = Person()
@@ -121,11 +113,9 @@ def edit(request, person_id=0):
             user_form.save()
             person_form.save()
             if request.is_ajax():
-                data = {}
-                data['redirect_url'] = reverse('view_person', kwargs={'person_id': person.id})
+                data = {'redirect_url': reverse('index')}
                 return HttpResponse(json.dumps(data), content_type="application/json")
-            return HttpResponseRedirect(
-                reverse('view_person', kwargs={'person_id': person.id}))
+            return HttpResponseRedirect(reverse('index'))
         else:
             message = SAVE_FORM_ERRORS_MESSAGE
     else:

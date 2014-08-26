@@ -6,7 +6,7 @@ register = template.Library()
 
 def edit_link(person):
     return {
-        'link': reverse('edit', kwargs={'person_id': person.id}),
+        'link': reverse('edit'),
     }
 
 register.inclusion_tag('hello/link.html')(edit_link)
