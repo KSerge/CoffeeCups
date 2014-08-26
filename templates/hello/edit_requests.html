@@ -13,7 +13,7 @@
 <form method="post" action="">
     {% csrf_token %}
     {{ formset.management_form }}
-    <table>
+    <div class="requests-area">
         {% for form in formset %}
         <p>
             {{ form.path.errors }}
@@ -22,7 +22,7 @@
             {{ form.priority }}
         </p>
         {% endfor %}
-    </table>
+    </div>
     <div class="command-buttons">
         <input type="submit" value="Save" />
     </div>
