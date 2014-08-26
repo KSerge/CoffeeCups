@@ -42,7 +42,7 @@ class HelloAppTestCase(TestCase):
         self.assertTrue(User.objects.filter(username=TEST_USERNAME).count() == 0)
 
     def test_edit_post_valid_view(self):
-        file_path = os.path.join(settings.BASE_DIR, 'apps', 'hello', 'test_image.png')
+        file_path = os.path.join(settings.BASE_DIR, 'apps', 'hello', 'images', 'test_image.png')
         f = open(file_path, 'r')
         post_data = {'profile_image': f, 'skype': TEST_SKYPE_NAME}
         url = reverse('edit')
