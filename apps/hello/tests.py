@@ -113,9 +113,22 @@ class HelloAppTestCase(TestCase):
     def test_request_view(self):
         url = reverse('index')
         response = self.client.get(url)
+        response = self.client.get(url)
+        response = self.client.get(url)
+        response = self.client.get(url)
+        url = reverse('default')
+        response = self.client.get(url)
+        response = self.client.get(url)
+        response = self.client.get(url)
+        response = self.client.get(url)
         url = reverse('requests')
         response = self.client.get(url)
+        response = self.client.get(url)
+        response = self.client.get(url)
+        response = self.client.get(url)
         self.assertIn('requests', response.context)
+        self.assertTrue(IncomingRequest.objects.all().count() > 10)
+        self.assertTrue(response.context['requests'].count() <= 10)
         self.assertIn('<h4>Requests:</h4>', response.content)
 
     def test_model_signals(self):
