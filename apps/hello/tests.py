@@ -71,8 +71,6 @@ class HelloAppTestCase(TestCase):
         response = self.client.post(url, {'username': TEST_USERNAME, 'password': TEST_PASSWORD})
         url = reverse('login')
         response = self.client.post(url, {'username': TEST_USERNAME, 'password': TEST_PASSWORD})
-        user = User.objects.get(username=TEST_USERNAME)
-        person = Person.objects.get(user_id=user.id)
         self.assertRedirects(response,
                              reverse('index'),
                              status_code=302,
@@ -97,8 +95,6 @@ class HelloAppTestCase(TestCase):
         response = self.client.post(url, {'username': TEST_USERNAME, 'password': TEST_PASSWORD})
         url = reverse('login')
         response = self.client.post(url, {'username': TEST_USERNAME, 'password': TEST_PASSWORD})
-        user = User.objects.get(username=TEST_USERNAME)
-        person = Person.objects.get(user_id=user.id)
         url = reverse('index')
         response = self.client.get(url)
         link = '<a href="{0}">Edit</a>'.format(reverse('edit'))

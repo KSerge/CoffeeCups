@@ -48,10 +48,6 @@ def register_user(request):
             user = user_form.save()
             user.set_password(user.password)
             user.save()
-
-            person = person_form.save(commit=False)
-            person.user = user
-            person.save()
             return HttpResponseRedirect(reverse('index'))
         else:
             message = SAVE_FORM_ERRORS_MESSAGE
