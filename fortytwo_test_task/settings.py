@@ -36,13 +36,6 @@ INSTALLED_APPS = (
     'apps.hello',
     'south',
 )
-#
-# TEST_RUNNER = 'django_nose.NoseTestSuiteRunner'
-#
-# NOSE_ARGS = [
-#     '--with-coverage',
-#     '--cover-package=apps.hello',
-# ]
 
 MIDDLEWARE_CLASSES = (
     'django.contrib.sessions.middleware.SessionMiddleware',
