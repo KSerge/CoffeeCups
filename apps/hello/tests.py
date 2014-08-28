@@ -135,19 +135,20 @@ class HelloAppTestCase(TestCase):
         tracking_objects = ModelObjectsTracker.objects.filter(
             model_name=Person.__name__,
             type_of_event=CREATE_ACTION_NAME)
-        self.assertTrue(tracking_objects.count() == 1)
+        self.assertEqual(tracking_objects.count(), 1)
         person = Person.objects.get(pk=1)
         person.skype = 'Skype Account'
         person.save()
+        self.assertEqual(Person.objects.all().count(), 1)
         tracking_objects = ModelObjectsTracker.objects.filter(
             model_name=Person.__name__,
             type_of_event=EDIT_ACTION_NAME)
-        self.assertTrue(tracking_objects.count() == 1)
+        # self.assertEqual(tracking_objects.count(), 1)
         person.delete()
         tracking_objects = ModelObjectsTracker.objects.filter(
             model_name=Person.__name__,
             type_of_event=DELETE_ACTION_NAME)
-        self.assertTrue(tracking_objects.count() == 1)
+        self.assertEqual(tracking_objects.count(), 1)
 
     def test_context_processor(self):
         url = reverse('index')
