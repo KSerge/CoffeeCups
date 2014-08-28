@@ -97,7 +97,7 @@ class HelloAppTestCase(TestCase):
         response = self.client.post(url, {'username': TEST_USERNAME, 'password': TEST_PASSWORD})
         url = reverse('index')
         response = self.client.get(url)
-        link = '<a href="{0}">Edit</a>'.format(reverse('edit'))
+        link = '<a href="/admin/hello/person/1/">Edit</a>'
         self.assertIn(link, response.content)
 
     def test_request_is_stored_to_db(self):
