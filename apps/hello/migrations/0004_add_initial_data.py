@@ -9,7 +9,7 @@ import os
 
 
 class Migration(DataMigration):
-
+    no_dry_run = False
     def forwards(self, orm):
         file_path = os.path.join(settings.BASE_DIR, 'apps', 'hello', 'fixtures', 'initial_data.json')
         call_command("loaddata", file_path)
