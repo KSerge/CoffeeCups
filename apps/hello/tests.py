@@ -6,6 +6,7 @@ from .models import CREATE_ACTION_NAME, EDIT_ACTION_NAME, DELETE_ACTION_NAME
 from .views import SAVE_FORM_ERRORS_MESSAGE, INVALID_LOGIN_MESSAGE
 from django.conf import settings
 import os
+from django.template import Template, Context
 
 TEST_SKYPE_NAME = 'New Skype Name'
 TEST_USERNAME = 'Username'
@@ -82,23 +83,12 @@ class HelloAppTestCase(TestCase):
         response = self.client.post(url, {'username': TEST_USERNAME, 'password': TEST_PASSWORD})
         self.assertIn(INVALID_LOGIN_MESSAGE, response.content)
 
-    def test_edit_link_for_not_auth_user(self):
-        user = User.objects.get(pk=2)
-        person = Person.objects.get(user_id=user.id)
-        url = reverse('index')
-        response = self.client.get(url)
-        link = '<a href="{0}">Edit</a>'.format(reverse('edit'))
-        self.assertNotIn(link, response.content)
-
-    def test_edit_link_for_auth_user(self):
-        url = reverse('register')
-        response = self.client.post(url, {'username': TEST_USERNAME, 'password': TEST_PASSWORD})
-        url = reverse('login')
-        response = self.client.post(url, {'username': TEST_USERNAME, 'password': TEST_PASSWORD})
-        url = reverse('index')
-        response = self.client.get(url)
-        link = '<a href="/admin/hello/person/1/">Edit</a>'
-        self.assertIn(link, response.content)
+    def test_edit_link_template_tag(self):
+        person = Person.objects.get(pk=1)
+        c = Context({'person': person})
+        test_template = Template("{% load hello_templatestags %} {% edit_link person %}")
+        rendered = test_template.render(c)
+        self.assertIn('<a href="/admin/hello/person/1/">Edit</a>', rendered)
 
     def test_request_is_stored_to_db(self):
         url = reverse('index')
@@ -112,23 +102,13 @@ class HelloAppTestCase(TestCase):
 
     def test_request_view(self):
         url = reverse('index')
-        response = self.client.get(url)
-        response = self.client.get(url)
-        response = self.client.get(url)
-        response = self.client.get(url)
-        url = reverse('default')
-        response = self.client.get(url)
-        response = self.client.get(url)
-        response = self.client.get(url)
-        response = self.client.get(url)
+        for x in range(0, 15):
+            response = self.client.get(url)
         url = reverse('requests')
-        response = self.client.get(url)
-        response = self.client.get(url)
-        response = self.client.get(url)
         response = self.client.get(url)
         self.assertIn('requests', response.context)
         self.assertTrue(IncomingRequest.objects.all().count() > 10)
-        self.assertTrue(response.context['requests'].count() <= 10)
+        self.assertTrue(response.context['requests'].count() == 10)
         self.assertIn('<h4>Requests:</h4>', response.content)
 
     def test_model_signals(self):
