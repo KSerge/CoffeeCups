@@ -1,6 +1,5 @@
 from django import template
 from django.core.urlresolvers import reverse
-from ..models import Person, IncomingRequest, ModelObjectsTracker
 
 register = template.Library()
 

@@ -50,12 +50,12 @@
 <div>
 {% if user.is_authenticated %}
     <h3>Hello {{ user.username }}!</h3>
-    {% edit_link person %}
     <a href="{% url 'logout' %}">Log Out</a>
 {% else %}
     <a href="{% url 'login' %}">Login</a>
     <a href="{% url 'register' %}">Register</a>
 {% endif %}
+{% edit_link person %}
 </div>
 <div class="sections-separator"></div>
 <a href="{% url 'requests' %}">Requests</a>
