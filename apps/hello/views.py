@@ -10,16 +10,13 @@ from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 import json
 
-PERSON_RESPONSE_KEYWORD = 'person'
-REQUESTS_RESPONSE_KEYWORD = 'requests'
-CONTEXT_SETTINGS_KEYWORD = 'settings'
 SAVE_FORM_ERRORS_MESSAGE = 'Some Errors Occurred'
-INVALID_LOGIN_MESSAGE = 'Invalid login details: {0}, {1}'
+INVALID_LOGIN_MESSAGE = 'Invalid login details'
 
 
 def context_processor(request):
     return {
-        CONTEXT_SETTINGS_KEYWORD: settings,
+        'settings': settings,
     }
 
 
@@ -30,7 +27,7 @@ def index(request, person_id=1):
         person = Person()
     request_context = RequestContext(
         request,
-        {PERSON_RESPONSE_KEYWORD: person})
+        {'person': person})
     return render(request, 'hello/index.html', request_context)
 
 
@@ -38,7 +35,7 @@ def view_requests(request):
     stored_requests = IncomingRequest.objects.order_by('priority', 'visiting_date')
     request_context = RequestContext(
         request,
-        {REQUESTS_RESPONSE_KEYWORD: stored_requests})
+        {'requests': stored_requests})
     return render(request, 'hello/requests.html', request_context)
 
 
@@ -76,11 +73,7 @@ def register_user(request):
             user = user_form.save()
             user.set_password(user.password)
             user.save()
-
-            person = person_form.save(commit=False)
-            person.user = user
-            person.save()
-            return HttpResponseRedirect(reverse('view_person', kwargs={'person_id': person.id}))
+            return HttpResponseRedirect(reverse('index'))
         else:
             message = SAVE_FORM_ERRORS_MESSAGE
     else:
@@ -108,12 +101,11 @@ def login_user(request):
         if user:
             if user.is_active:
                 login(request, user)
-                person = get_object_or_404(Person, user_id=user.id)
-                return HttpResponseRedirect(reverse('view_person', kwargs={'person_id': person.id}))
+                return HttpResponseRedirect(reverse('index'))
             else:
                 message = "Your account is disabled"
         else:
-            message = INVALID_LOGIN_MESSAGE.format(username, password)
+            message = INVALID_LOGIN_MESSAGE
     else:
         user_form = UserForm()
 
@@ -127,9 +119,9 @@ def login_user(request):
     return render(request, 'hello/login.html', request_context)
 
 
-def edit(request, person_id=0):
+def edit(request):
     try:
-        person = Person.objects.get(pk=person_id)
+        person = Person.objects.get(pk=1)
         user = User.objects.get(pk=person.user_id)
     except Person.DoesNotExist, User.DoesNotExists:
         person = Person()
@@ -142,10 +134,9 @@ def edit(request, person_id=0):
             user_form.save()
             person_form.save()
             if request.is_ajax():
-                data = {}
-                data['redirect_url'] = reverse('view_person', kwargs={'person_id': person.id})
+                data = {'redirect_url': reverse('index')}
                 return HttpResponse(json.dumps(data), content_type="application/json")
-            return HttpResponseRedirect(reverse('view_person', kwargs={'person_id': person.id}))
+            return HttpResponseRedirect(reverse('index'))
         else:
             message = SAVE_FORM_ERRORS_MESSAGE
     else:

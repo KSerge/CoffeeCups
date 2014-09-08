@@ -12,7 +12,6 @@ CHOICES = [(n, n) for n in xrange(0, distinct_requests.count())]
 class PersonForm(ModelForm):
     class Meta:
         model = Person
-        fields = '__all__'
         fields = ('bio', 'other_contacts', 'date_of_birth', 'jabber', 'skype', 'profile_image')
         widgets = {
             'bio': Textarea(attrs={'cols': 50, 'rows': 5, 'maxlength': 250}),
@@ -32,7 +31,7 @@ class UserForm(ModelForm):
 
 class UserEditForm(UserForm):
     class Meta(UserForm.Meta):
-        exclude = ('username', 'password',)
+        fields = ('first_name', 'last_name', 'email')        exclude = ('username', 'password',)
 
 
 class IncomingRequestForm(Form):

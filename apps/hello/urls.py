@@ -1,15 +1,11 @@
 from django.conf.urls import url
-from .views import *
+from .views import register_user, login_user, user_logout, edit, view_requests, index
 
 urlpatterns = [
-    url(r'^hello/register/$', register_user, name='register'),
-    url(r'hello/login/$', login_user, name='login'),
-    url(r'^hello/logout/$', user_logout, name='logout'),
-    url(r'^hello/edit/(?P<person_id>\w+)/$', edit, name='edit'),
-    url(r'^hello/edit/$', edit, name='edit'),
-    url(r'^hello/requests/$', view_requests, name='requests'),
-    url(r'^hello/edit-requests/$', edit_requests, name='edit_requests'),
-    url(r'^hello/(?P<person_id>\w+)/$', index, name='view_person'),
-    url(r'^$', index, name='default'),
-    url(r'^hello/$', index, name='index'),
+    url(r'^register/$', register_user, name='register'),
+    url(r'login/$', login_user, name='login'),
+    url(r'^logout/$', user_logout, name='logout'),
+    url(r'^edit/$', edit, name='edit'),
+    url(r'^requests/$', view_requests, name='requests'),
+    url(r'^$', index, name='index'),
 ]

@@ -15,7 +15,7 @@ $(document).ready(function () {
         $.ajax({
             url : $(this).attr("action"),
             type: "POST",
-            data : $(this).serializeArray(),
+            data : new FormData($(this)[0]),
             success:function(data, textStatus, jqXHR){
                 $('#overlay').hide();
                 $('#overlayContent').hide();
@@ -43,7 +43,7 @@ $(document).ready(function () {
             <div style="color: #038; margin-bottom: 0px; font-size: 24px; padding-top: 10px; cursor: default;">Please wait</div>
         </div>
     </div>
-    <form action="{% url 'edit' person_id=person.id %}" method="post" enctype="multipart/form-data" id="mainForm">
+    <form action="{% url 'edit' %}" method="post" enctype="multipart/form-data" id="mainForm">
         {% csrf_token %}
         <div class="inline">
             <p>
@@ -94,7 +94,7 @@ $(document).ready(function () {
         </div>
         <div class="command-buttons">
             <input type="submit" value="Save" />
-            <a href="{% url 'view_person' person_id=person.id %}">Cancel</a>
+            <a href="{% url 'index' %}">Cancel</a>
         </div>
     </form>
 {% else %}
