@@ -7,6 +7,7 @@ from .views import SAVE_FORM_ERRORS_MESSAGE, INVALID_LOGIN_MESSAGE
 from django.conf import settings
 import os
 from django.template import Template, Context
+import time
 
 TEST_SKYPE_NAME = 'New Skype Name'
 TEST_USERNAME = 'Username'
@@ -15,6 +16,19 @@ TEST_PASSWORD = 'password'
 
 class HelloAppTestCase(TestCase):
     fixtures = ['initial_data.json']
+
+    def test_command_models_info(self):
+        script_path = os.path.join(settings.BASE_DIR, 'collect_models_info.sh')
+        os.system(script_path)
+        result_file_name = time.strftime('%Y-%m-%d') + '.dat'
+        script_result_path = os.path.join(settings.BASE_DIR,
+                                          'script_results',
+                                          result_file_name)
+        self.assertTrue(os.path.isfile(script_result_path))
+        f = open(script_result_path, 'r')
+        file_content = ' '.join(f.readlines())
+        self.assertIn('Person: objects: 1', file_content)
+        f.close()
 
     def test_person_is_inserted(self):
         user = User.objects.get(pk=2)
