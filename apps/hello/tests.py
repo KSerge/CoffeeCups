@@ -17,19 +17,6 @@ TEST_PASSWORD = 'password'
 class HelloAppTestCase(TestCase):
     fixtures = ['initial_data.json']
 
-    def test_command_models_info(self):
-        script_path = os.path.join(settings.BASE_DIR, 'collect_models_info.sh')
-        os.system(script_path)
-        result_file_name = time.strftime('%Y-%m-%d') + '.dat'
-        script_result_path = os.path.join(settings.BASE_DIR,
-                                          'script_results',
-                                          result_file_name)
-        self.assertTrue(os.path.isfile(script_result_path))
-        f = open(script_result_path, 'r')
-        file_content = ' '.join(f.readlines())
-        self.assertIn('Person: objects: 1', file_content)
-        f.close()
-
     def test_person_is_inserted(self):
         user = User.objects.get(pk=2)
         self.assertTrue(Person.objects.filter(user_id=user.id).count() == 1)
@@ -103,6 +90,19 @@ class HelloAppTestCase(TestCase):
         test_template = Template("{% load hello_templatestags %} {% edit_link person %}")
         rendered = test_template.render(c)
         self.assertIn('<a href="/admin/hello/person/1/">Edit</a>', rendered)
+
+    def test_command_models_info(self):
+        script_path = os.path.join(settings.BASE_DIR, 'collect_models_info.sh')
+        os.system(script_path)
+        result_file_name = time.strftime('%Y-%m-%d') + '.dat'
+        script_result_path = os.path.join(settings.BASE_DIR,
+                                          'script_results',
+                                          result_file_name)
+        self.assertTrue(os.path.isfile(script_result_path))
+        f = open(script_result_path, 'r')
+        file_content = ' '.join(f.readlines())
+        self.assertIn('Person: objects: 1', file_content)
+        f.close()
 
     def test_request_is_stored_to_db(self):
         url = reverse('index')
