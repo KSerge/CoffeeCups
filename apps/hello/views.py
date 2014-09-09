@@ -32,36 +32,36 @@ def index(request, person_id=1):
 
 
 def view_requests(request):
-    stored_requests = IncomingRequest.objects.order_by('priority', 'visiting_date')
+    stored_requests = IncomingRequest.objects.order_by('priority', 'visiting_date')[0:10]
     request_context = RequestContext(
         request,
         {'requests': stored_requests})
     return render(request, 'hello/requests.html', request_context)
 
-
-def edit_requests(request):
-    distinct_requests = IncomingRequest.objects.values('path').distinct()
-    initial_data = []
-    for record in distinct_requests:
-        initial_data.append({'path': record['path']})
-    formset = IncomingRequestFormset(initial=initial_data)
-
-    if request.method == 'POST':
-        formset = IncomingRequestFormset(request.POST)
-        if formset.is_valid():
-            priority_dict = {}
-            for item in formset.cleaned_data:
-                priority_dict[item['path']] = item['priority']
-            requests = IncomingRequest.objects.all()
-            for item in requests:
-                item.priority = priority_dict.get(item.path, 0)
-                item.save()
-            return HttpResponseRedirect(reverse('requests'))
-
-    request_context = RequestContext(
-        request,
-        {REQUESTS_RESPONSE_KEYWORD: distinct_requests, 'formset': formset},)
-    return render(request, 'hello/edit_requests.html', request_context)
+#
+# def edit_requests(request):
+#     distinct_requests = IncomingRequest.objects.values('path').distinct()
+#     initial_data = []
+#     for record in distinct_requests:
+#         initial_data.append({'path': record['path']})
+#     formset = IncomingRequestFormset(initial=initial_data)
+#
+#     if request.method == 'POST':
+#         formset = IncomingRequestFormset(request.POST)
+#         if formset.is_valid():
+#             priority_dict = {}
+#             for item in formset.cleaned_data:
+#                 priority_dict[item['path']] = item['priority']
+#             requests = IncomingRequest.objects.all()
+#             for item in requests:
+#                 item.priority = priority_dict.get(item.path, 0)
+#                 item.save()
+#             return HttpResponseRedirect(reverse('requests'))
+#
+#     request_context = RequestContext(
+#         request,
+#         {'requests': distinct_requests, 'formset': formset},)
+#     return render(request, 'hello/edit_requests.html', request_context)
 
 
 def register_user(request):
