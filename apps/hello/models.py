@@ -2,6 +2,7 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.utils import timezone
 from django.db.models.signals import post_save, post_delete
+from django.contrib import admin
 
 CREATE_ACTION_NAME = 'created'
 EDIT_ACTION_NAME = 'edited'
@@ -23,15 +24,18 @@ class IncomingRequest(models.Model):
     visiting_date = models.DateTimeField(auto_now=True)
     priority = models.PositiveSmallIntegerField(default=0)
 
-    def save(self, *args, **kwargs):
-        if not self.pk:
-            similar_requests = IncomingRequest.objects.filter(path=self.path)
-            if similar_requests.count() == 0:
-                priority = 0
-            else:
-                priority = similar_requests[0].priority
-            self.priority = priority
-        super(IncomingRequest, self).save(*args, **kwargs)
+    def __str__(self):
+        return 'path:' + self.path + ' priority:' + str(self.priority)
+
+    # def save(self, *args, **kwargs):
+    #     if not self.pk:
+    #         similar_requests = IncomingRequest.objects.filter(path=self.path)
+    #         if similar_requests.count() == 0:
+    #             priority = 0
+    #         else:
+    #             priority = similar_requests[0].priority
+    #         self.priority = priority
+    #     super(IncomingRequest, self).save(*args, **kwargs)
 
 
 class ModelObjectsTracker(models.Model):
