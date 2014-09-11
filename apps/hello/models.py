@@ -2,7 +2,6 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.utils import timezone
 from django.db.models.signals import post_save, post_delete
-from django.contrib import admin
 
 CREATE_ACTION_NAME = 'created'
 EDIT_ACTION_NAME = 'edited'

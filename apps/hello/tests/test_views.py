@@ -77,6 +77,20 @@ class HelloAppTestCase(TestCase):
         self.assertTrue(response.context['requests'].count() == 10)
         self.assertIn('<h4>Requests:</h4>', response.content)
 
+    def test_records_ordering_in_request_view(self):
+        for i in range(1, 3):
+            request = IncomingRequest()
+            request.url = 'test' + str(i)
+            request.priority = i
+            request.save()
+        url = reverse('requests')
+        response = self.client.get(url)
+        self.assertTrue(IncomingRequest.objects.all().count() == 3)
+        self.assertEqual(response.context['requests'][0].priority, 2)
+        self.assertEqual(response.context['requests'][1].priority, 1)
+        self.assertEqual(response.context['requests'][2].priority, 0)
+
+
     # def test_register_post_valid_view(self):
     #     url = reverse('register')
     #     response = self.client.post(url, {'username': TEST_USERNAME, 'password': TEST_PASSWORD})
